@@ -3,7 +3,8 @@ var express = require("express");
 var router = express.Router();
 var util = require("../utils/util");
 var fs = require("fs");
-var logger = require("../utils/winston/winston");
+// var logger = require("../utils/winston/winston");
+var logger = require("../utils/winston/winston")("BAOKIM-LISTENER");
 var appRootPath = require("app-root-path");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
 var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
@@ -17,12 +18,12 @@ router.get("/", function (req, res, next) {
 router.post("/notify", function (req, res, next) {
   let requestInfo = req.body;
   //check
-  logger.info("webhook", requestInfo);
+  logger.info("webhook" + JSON.stringify(requestInfo));
   return res.status(200).json({ err_code: "0", message: "recieved" });
 });
 router.post("/notifyCollection", function (req, res, next) {
   // console.log(req.body);
-  logger.info("collection", req.body);
+  logger.info("collection: " + JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -73,7 +74,7 @@ router.post("/notifyCollection", function (req, res, next) {
   });
 });
 router.post("/notifyBankSwitch", function (req, res, next) {
-  logger.info("bankswitch", req.body);
+  logger.info("bankswitch: " + JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
