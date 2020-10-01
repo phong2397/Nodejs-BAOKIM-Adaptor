@@ -58,7 +58,7 @@ router.post("/notifyCollection", function (req, res, next) {
   //   });
   let responseCode = 200;
   let responseMessage = "Success";
-  let referenceId = `${PARTNERCODE}${uuidv4()}`;
+  let referenceId = `${requestInfo.PartnerCode}${uuidv4()}`;
   let accNo = requestInfo.AccNo;
   let affTransDebt = requestInfo.AffTransDebt;
   let rawData = `${responseCode}|${responseMessage}|${referenceId}|${accNo}|${affTransDebt}`;
