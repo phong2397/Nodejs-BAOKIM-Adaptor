@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router();
 var util = require("../utils/util");
 var fs = require("fs");
+var baokim = require("../services/baokim");
 var logger = require("../utils/winston/winston")("BAOKIM-LISTENER");
 var appRootPath = require("app-root-path");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
