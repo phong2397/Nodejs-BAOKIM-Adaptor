@@ -1,6 +1,6 @@
 require("dotenv").config();
 var fs = require("fs");
-var util = require("./util");
+var util = require("../utils/util");
 var appRootPath = require("app-root-path");
 var axios = require("axios");
 var { config } = require(`${appRootPath}/config/config`);
