@@ -1,0 +1,23 @@
+channelId: 1
+key: 'wUhLDGWwKTvEiOSU'
+
+baokim:
+  bankNo: '970403'
+  url: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
+  privatekey: 'keyRSA/private.pem'
+  publickey: 'keyRSA/public.pem'
+  accType:
+    account: 1
+    card: 0
+  operation:
+    transferMoney: 9002
+    checkTransaction: 9003
+
+geerong:
+  # pmcHost: http://payment-test1.niwodai.net
+  # pmcGatewayUrl: http://payment-test1.niwodai.net/pmc-gateway/abroad/process
+  pmcHost: http://payment-test1.niwodai.net
+  pmcGatewayUrl: http://payment-test1.niwodai.net/pmc-gateway/abroad/process
+  aseKey: wUhLDGWwKTvEiOSU
+  payType:
+    PROPOSEDBANKCARDPAYMENT: 16

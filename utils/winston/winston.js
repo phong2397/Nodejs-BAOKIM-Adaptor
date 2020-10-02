@@ -40,7 +40,6 @@ var logger = (_label) => {
       _logger.info(message.replace(/\r?\n|\r/g, " "));
     },
   };
-
   return _logger;
 };
 

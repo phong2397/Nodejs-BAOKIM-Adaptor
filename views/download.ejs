@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Download APK File</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1>Logs</h1>
+    <ul>
+      <% logs.forEach(element => { %>
+      <li>
+        <span><a href="/logs/<%=element%>"><%=element%></a></span>
+      </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

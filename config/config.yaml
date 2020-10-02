@@ -1,0 +1,18 @@
+key: 'wUhLDGWwKTvEiOSU'
+
+baokim:
+  bankNo: '970403'
+  url: 'https://chihobaokim.megacard.vn:3669'
+  urlapptest: 'https://chihobaokim.megacard.vn:3669/Sandbox/PartnerMoneyTransfer'
+  privatekey: 'keyRSA/private.pem'
+  publickey: 'keyRSA/public.pem'
+  accType:
+    account: 1
+    card: 0
+  operation:
+    transferMoney: 9002
+    checkTransaction: 9003
+
+geerong:
+  pmcHost: http://payment-test1.niwodai.net
+  pmcGatewayUrl: http://payment-test1.niwodai.net/pmc-gateway/abroad/process

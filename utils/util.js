@@ -81,5 +81,5 @@ module.exports = {
   geerongEncrypt: geerongEncrypt,
   geerongDecrypt: geerongDecrypt,
   baokimVerifySignature: baokimVerifySignature,
-  createRSSAignature: createRSASignature,
+  createRSASignature: createRSASignature,
 };
