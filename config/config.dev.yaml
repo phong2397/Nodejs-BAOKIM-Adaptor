@@ -1,11 +1,11 @@
 channelId: 1
-key: 'wUhLDGWwKTvEiOSU'
+key: "wUhLDGWwKTvEiOSU"
 
 baokim:
-  bankNo: '970403'
-  url: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
-  privatekey: 'keyRSA/private.pem'
-  publickey: 'keyRSA/public.pem'
+  bankNo: "970403"
+  url: "http://210.245.80.186:8085/Sandbox/Collection/V2"
+  privatekey: "keyRSA/private.pem"
+  publickey: "keyRSA/public.pem"
   accType:
     account: 1
     card: 0

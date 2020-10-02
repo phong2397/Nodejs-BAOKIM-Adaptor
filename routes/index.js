@@ -7,6 +7,7 @@ var fs = require("fs");
 var baokim = require("../services/baokim");
 var logger = require("../utils/winston/winston")("BAOKIM-LISTENER");
 var appRootPath = require("app-root-path");
+const { request } = require("express");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
 var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
 var baoKimPublicKey = fs.readFileSync(
@@ -27,6 +28,18 @@ router.post("/collectAtPoint", async function (req, res, next) {
     Signature: req.body.Signature,
   };
   if (!requestInfo.Signature) {
+    return res.status(200).json({
+      ResponseCode: 120,
+      ResponseMessage: "Signature is incorrect",
+    });
+  }
+  let rawRequestInfo = `${requestInfo.RequestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccNo}`;
+  let checkSignature = util.baokimVerifySignature(
+    rawRequestInfo,
+    requestInfo.Signature,
+    baoKimPublicKey
+  );
+  if (!checkSignature) {
     return res.status(200).json({
       ResponseCode: 120,
       ResponseMessage: "Signature is incorrect",
@@ -54,7 +67,7 @@ router.post("/collectAtPoint", async function (req, res, next) {
       ResponseMessage: "Failed",
     });
   }
-  if (responseSearch.ResponseCode != 200) {
+  if (responseSearch.data.ResponseCode != 200) {
     // 112 	AccNo is not exist
     return res.status(200).json({
       ResponseCode: 112,
@@ -145,7 +158,7 @@ router.post("/notifyBankSwitch", function (req, res, next) {
     OrderId: req.body.OrderId,
     BankSortName: req.body.BankSortName,
   };
-  let Signature = request.headers.Signature;
+  let Signature = req.headers.Signature;
   if (!Signature) {
     return res.status(200).json({
       ResponseCode: 120,
