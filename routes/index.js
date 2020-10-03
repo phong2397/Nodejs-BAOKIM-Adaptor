@@ -5,7 +5,7 @@ var router = express.Router();
 var util = require("../utils/util");
 var fs = require("fs");
 var baokim = require("../services/baokim");
-var logger = require("../utils/winston/winston")("BAOKIM-LISTENER");
+var logger = require("../utils/winston/winston");
 var appRootPath = require("app-root-path");
 const { request } = require("express");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
@@ -13,13 +13,14 @@ var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
 var baoKimPublicKey = fs.readFileSync(
   `${appRootPath}/keyRSA/baokim/public.pem`
 );
-router.post("/notify", function (req, res, next) {
-  let requestInfo = req.body;
-  //check
-  logger.info("webhook" + JSON.stringify(requestInfo));
-  return res.status(200).json({ err_code: "0", message: "recieved" });
-});
+// router.post("/notify", function (req, res, next) {
+//   let requestInfo = req.body;
+//   //check
+//   logger.info("webhook" + JSON.stringify(requestInfo));
+//   return res.status(200).json({ err_code: "0", message: "recieved" });
+// });
 router.post("/collectAtPoint", async function (req, res, next) {
+  logger("BK-COLLECTATPOINT").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -95,7 +96,7 @@ router.post("/collectAtPoint", async function (req, res, next) {
 });
 router.post("/notifyCollection", function (req, res, next) {
   // console.log(req.body);
-  logger.info("collection: " + JSON.stringify(req.body));
+  logger("BK-NOTIFYCOLLECTION").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -147,7 +148,7 @@ router.post("/notifyCollection", function (req, res, next) {
   });
 });
 router.post("/notifyBankSwitch", function (req, res, next) {
-  logger.info("bankswitch: " + JSON.stringify(req.body));
+  logger("BK-NOTIFYBANKSWITCH").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
