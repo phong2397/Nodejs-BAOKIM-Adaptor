@@ -60,7 +60,6 @@ router.post("/collectAtPoint", async function (req, res, next) {
 
   //Collect data from database
   let responseSearch = await baokim.retriveVirtualAccount(requestSearch);
-  console.log(responseSearch);
   if (!responseSearch.data) {
     return res.status(200).json(MSG_FAIL_ERROR);
   }
