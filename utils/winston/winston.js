@@ -29,7 +29,7 @@ var logger = (_label) => {
     format: combine(label({ label: _label }), timestamp(), consoleFormat),
     transports: [
       new winston.transports.File(options.file),
-      new winston.transports.Console(options.console),
+      new winston.transports.Console(),
     ],
     exitOnError: false, // do not exit on handled exceptions
   });
