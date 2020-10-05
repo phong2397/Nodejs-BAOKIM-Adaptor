@@ -1,5 +1,5 @@
 var { v4: uuidv4 } = require("uuid");
-var moment = require("moment");
+var moment = require("moment-timezone");
 var express = require("express");
 var router = express.Router();
 var util = require("../utils/util");
@@ -45,8 +45,10 @@ router.post("/collectAtPoint", async function (req, res, next) {
   );
   let accountNo = requestInfo.AccNo;
   let requestSearch = {
-    requestId: `BK${moment().format("x")}${Math.random(100)}`,
-    requestTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+    requestId: `BK${moment().tz("Asia/Ho_Chi_Minh").format("x")}${Math.random(
+      100
+    )}`,
+    requestTime: moment().tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD HH:mm:ss"),
     accountNo: accountNo,
   };
   if (!requestInfo.Signature || !checkSignature) {
