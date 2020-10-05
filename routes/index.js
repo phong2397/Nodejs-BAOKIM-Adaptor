@@ -7,20 +7,29 @@ var fs = require("fs");
 var baokim = require("../services/baokim");
 var logger = require("../utils/winston/winston");
 var appRootPath = require("app-root-path");
-const { request } = require("express");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
 var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
 var baoKimPublicKey = fs.readFileSync(
   `${appRootPath}/keyRSA/baokim/public.pem`
 );
-// router.post("/notify", function (req, res, next) {
-//   let requestInfo = req.body;
-//   //check
-//   logger.info("webhook" + JSON.stringify(requestInfo));
-//   return res.status(200).json({ err_code: "0", message: "recieved" });
-// });
+var MSG_ACCOUNT_ERROR = {
+  ResponseCode: 111,
+  ResponseMessage: "AccNo is incorrect",
+};
+var MSG_ACCOUNT_NOT_EXIST = {
+  ResponseCode: 112,
+  ResponseMessage: "AccNo is not exist",
+};
+var MSG_FAIL_ERROR = {
+  ResponseCode: 120,
+  ResponseMessage: "Signature is incorrect",
+};
+var MSG_SIGN_ERROR = {
+  ResponseCode: 120,
+  ResponseMessage: "Signature is incorrect",
+};
+
 router.post("/collectAtPoint", async function (req, res, next) {
-  logger("BK-COLLECTATPOINT").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -28,53 +37,34 @@ router.post("/collectAtPoint", async function (req, res, next) {
     AccNo: req.body.AccNo,
     Signature: req.body.Signature,
   };
-  if (!requestInfo.Signature) {
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
-  }
   let rawRequestInfo = `${requestInfo.RequestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccNo}`;
   let checkSignature = util.baokimVerifySignature(
     rawRequestInfo,
     requestInfo.Signature,
     baoKimPublicKey
   );
-  if (!checkSignature) {
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
-  }
   let accountNo = requestInfo.AccNo;
-  if (!accountNo) {
-    //111 AccNo is incorrect
-    return res.status(200).json({
-      ResponseCode: 111,
-      ResponseMessage: "AccNo is incorrect",
-    });
-  }
   let requestSearch = {
     requestId: `BK${moment().format("x")}${Math.random(100)}`,
     requestTime: moment().format("YYYY-MM-DD HH:mm:ss"),
     accountNo: accountNo,
   };
+  if (!requestInfo.Signature || !checkSignature) {
+    return res.status(200).json(MSG_SIGN_ERROR);
+  }
+  if (!accountNo) {
+    return res.status(200).json(MSG_ACCOUNT_ERROR);
+  }
+
   //Collect data from database
   let responseSearch = await baokim.retriveVirtualAccount(requestSearch);
   if (!responseSearch.data) {
-    // 101 	Error processing from Baokim
-    return res.status(200).json({
-      ResponseCode: 11,
-      ResponseMessage: "Failed",
-    });
+    return res.status(200).json(MSG_FAIL_ERROR);
   }
   if (responseSearch.data.ResponseCode != 200) {
-    // 112 	AccNo is not exist
-    return res.status(200).json({
-      ResponseCode: 112,
-      ResponseMessage: "AccNo is not exist",
-    });
+    return res.status(200).json(MSG_ACCOUNT_NOT_EXIST);
   }
+
   let collectAmount = "100000";
   let responseData = {
     ResponseCode: 200,
@@ -95,8 +85,6 @@ router.post("/collectAtPoint", async function (req, res, next) {
   return res.status(200).json(responseData);
 });
 router.post("/notifyCollection", function (req, res, next) {
-  // console.log(req.body);
-  logger("BK-NOTIFYCOLLECTION").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -115,22 +103,15 @@ router.post("/notifyCollection", function (req, res, next) {
   //Sandbox test - required field - BK request null
   requestInfo.ClientIdNo = requestInfo.ClientIdNo ? requestInfo.ClientIdNo : "";
   let dataFromRequest = `${requestInfo.RequestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccNo}|${requestInfo.ClientIdNo}|${requestInfo.TransId}|${requestInfo.TransAmount}|${requestInfo.TransTime}|${requestInfo.BefTransDebt}|${requestInfo.AffTransDebt}|${requestInfo.AccountType}|${requestInfo.OrderId}`;
-  if (!requestInfo.Signature)
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
   let checkSignature = util.baokimVerifySignature(
     dataFromRequest,
     requestInfo.Signature,
     baoKimPublicKey
   );
+  if (!requestInfo.Signature || !checkSignature) {
+    return res.status(200).json(MSG_SIGN_ERROR);
+  }
   // Verify Signature
-  if (!checkSignature)
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
   let responseCode = 200;
   let responseMessage = "Success";
   let referenceId = `${requestInfo.PartnerCode}${uuidv4()}`;
@@ -138,6 +119,7 @@ router.post("/notifyCollection", function (req, res, next) {
   let affTransDebt = requestInfo.AffTransDebt;
   let rawData = `${responseCode}|${responseMessage}|${referenceId}|${accNo}|${affTransDebt}`;
   let signature = util.createRSASignature(rawData, privateKey);
+
   return res.status(200).json({
     ResponseCode: responseCode,
     ResponseMessage: responseMessage,
@@ -148,7 +130,6 @@ router.post("/notifyCollection", function (req, res, next) {
   });
 });
 router.post("/notifyBankSwitch", function (req, res, next) {
-  logger("BK-NOTIFYBANKSWITCH").info(JSON.stringify(req.body));
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -160,23 +141,14 @@ router.post("/notifyBankSwitch", function (req, res, next) {
     BankSortName: req.body.BankSortName,
   };
   let Signature = req.headers.Signature;
-  if (!Signature) {
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
-  }
   let checkSignature = util.baokimVerifySignature(
     dataFromRequest,
     requestInfo.Signature,
     baoKimPublicKey
   );
-  // Verify Signature
-  if (!checkSignature) {
-    return res.status(200).json({
-      ResponseCode: 120,
-      ResponseMessage: "Signature is incorrect",
-    });
+  //Check Signature
+  if (!Signature || !checkSignature) {
+    return res.status(200).json(MSG_SIGN_ERROR);
   }
   let responseInfo = {
     ResponseCode: 200,
