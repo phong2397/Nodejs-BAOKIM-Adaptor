@@ -13,6 +13,7 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 loggerBody(app, {
+  logReqDateTime: false,
   noColors: true,
   prettify: false,
   stream: {
