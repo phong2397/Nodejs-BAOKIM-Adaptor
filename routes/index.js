@@ -132,16 +132,7 @@ router.post("/notifyCollection", function (req, res, next) {
   });
 });
 router.post("/notifyBankSwitch", function (req, res, next) {
-  let requestInfo = {
-    RequestId: req.body.RequestId,
-    RequestTime: req.body.RequestTime,
-    PartnerCode: req.body.PartnerCode,
-    AccName: req.body.AccName,
-    AccNo: req.body.AccNo,
-    ExpireDate: req.body.ExpireDate,
-    OrderId: req.body.OrderId,
-    BankSortName: req.body.BankSortName,
-  };
+  let requestInfo = JSON.stringify(req.body);
   let Signature = req.headers.signature;
   let checkSignature = util.baokimVerifySignature(
     JSON.stringify(requestInfo),
