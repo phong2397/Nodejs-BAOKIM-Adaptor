@@ -142,10 +142,10 @@ router.post("/notifyBankSwitch", function (req, res, next) {
     OrderId: req.body.OrderId,
     BankSortName: req.body.BankSortName,
   };
-  // let rawData = `${requestInfo.requestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccName}|${requestInfo.AccNo}|${requestInfo.ExpirDate}|${requestInfo.OrderId}|${requestInfo.BankSortName}`;
+  let rawData = `${requestInfo.requestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccName}|${requestInfo.AccNo}|${requestInfo.ExpirDate}|${requestInfo.OrderId}|${requestInfo.BankSortName}`;
   let Signature = req.headers.signature;
   let checkSignature = util.baokimVerifySignature(
-    JSON.stringify(requestInfo),
+    rawData,
     Signature,
     baoKimPublicKey
   );
