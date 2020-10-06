@@ -13,6 +13,10 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 loggerBody(app, {
+  logReqHeaderList: true,
+  logAllReqHeader: true,
+  logResHeaderList: true,
+  logAllResHeader: true,
   logReqDateTime: false,
   noColors: true,
   prettify: false,
