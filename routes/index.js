@@ -138,14 +138,13 @@ router.post("/notifyBankSwitch", function (req, res, next) {
     PartnerCode: req.body.PartnerCode,
     AccName: req.body.AccName,
     AccNo: req.body.AccNo,
-    ExpirDate: req.body.ExpirDate,
+    ExpireDate: req.body.ExpireDate,
     OrderId: req.body.OrderId,
     BankSortName: req.body.BankSortName,
   };
-  let rawData = `${requestInfo.requestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccName}|${requestInfo.AccNo}|${requestInfo.ExpirDate}|${requestInfo.OrderId}|${requestInfo.BankSortName}`;
   let Signature = req.headers.signature;
   let checkSignature = util.baokimVerifySignature(
-    rawData,
+    JSON.stringify(requestInfo),
     Signature,
     baoKimPublicKey
   );
