@@ -4,7 +4,7 @@ var express = require("express");
 var router = express.Router();
 var util = require("../utils/util");
 var fs = require("fs");
-var baokim = require("../services/baokim");
+var baokim = require("../services/virtual-account");
 var logger = require("../utils/winston/winston");
 var appRootPath = require("app-root-path");
 var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
@@ -29,7 +29,7 @@ var MSG_SIGN_ERROR = {
   ResponseMessage: "Signature is incorrect",
 };
 
-router.post("/collectAtPoint", async function (req, res, next) {
+router.post("/collectatpoint", async function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -86,7 +86,7 @@ router.post("/collectAtPoint", async function (req, res, next) {
   responseData.Signature = signature;
   return res.status(200).json(responseData);
 });
-router.post("/notifyCollection", function (req, res, next) {
+router.post("/notifycollection", function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -131,7 +131,7 @@ router.post("/notifyCollection", function (req, res, next) {
     Signature: signature,
   });
 });
-router.post("/notifyBankSwitch", function (req, res, next) {
+router.post("/notifybankswitch", function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,

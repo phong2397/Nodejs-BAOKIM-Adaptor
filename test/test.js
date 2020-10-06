@@ -14,21 +14,7 @@ describe("BAOKIM", () => {
     //Before each test we empty the database in your case
     done();
   });
-  /*
-   * Test the /GET route
-   */
-  context("/GET ", () => {
-    it("it should 404", (done) => {
-      chai
-        .request(server)
-        .get("/")
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
-  });
-  context("POST /collectAtPoint  ", () => {
+  context("POST /collectatpoint  ", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BK5F7AEC006D41F191L9",
@@ -40,7 +26,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/collectAtPoint")
+        .post("/collectatpoint")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -71,7 +57,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/collectAtPoint")
+        .post("/collectatpoint")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -81,7 +67,7 @@ describe("BAOKIM", () => {
         });
     });
   });
-  context("POST /notifyCollection  ", () => {
+  context("POST /notifycollection  ", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BK4c3fe101e2742fa",
@@ -101,7 +87,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifyCollection")
+        .post("/notifycollection")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -129,7 +115,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifyCollection")
+        .post("/notifycollection")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -139,7 +125,7 @@ describe("BAOKIM", () => {
         });
     });
   });
-  context("POST /notifyBankSwitch ", () => {
+  context("POST /notifybankSwitch ", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BKf7690e177a641f1",
@@ -153,7 +139,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifyBankSwitch")
+        .post("/notifybankswitch")
         .set({
           Signature:
             "NgAaXjFlFR4RqZuEoZ7sQLEm+/j9jAmvsNvS3+DokSfgJ0EYyrWZ1JJu4wEJQdHErZjN4xtvX5F6q3HQJEmneJ4BDk+YSEnKuPwBbGFpyb2YdbAoKj4ASw8J+igps/W9Qze7HX1Hpu5EG452YcWx6BOlJm16DZ3LPImIlLviAsE=",
@@ -184,7 +170,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifyBankSwitch")
+        .post("/notifybankswitch")
         .set({
           Signature:
             "SgAaXjFlFR4RqZuEoZ7sQLEm+/j9jAmvsNvS3+DokSfgJ0EYyrWZ1JJu4wEJQdHErZjN4xtvX5F6q3HQJEmneJ4BDk+YSEnKuPwBbGFpyb2YdbAoKj4ASw8J+igps/W9Qze7HX1Hpu5EG452YcWx6BOlJm16DZ3LPImIlLviAsE=",

@@ -1,4 +1,6 @@
 var winston = require("winston");
+var appRoot = require("app-root-path");
+require("winston-daily-rotate-file");
 const { combine, timestamp, label, printf, prettyPrint } = winston.format;
 
 const consoleFormat = printf(({ level, message, label, timestamp }) => {
@@ -28,6 +30,14 @@ var logger = (_label) => {
   var _logger = winston.createLogger({
     format: combine(label({ label: _label }), timestamp(), consoleFormat),
     transports: [
+      new winston.transports.DailyRotateFile({
+        filename: "application-%DATE%.log",
+        dirname: `${appRoot}/logs/`,
+        level: "info",
+        json: false,
+        zippedArchive: true,
+        maxSize: "20m",
+      }),
       new winston.transports.File(options.file),
       new winston.transports.Console(),
     ],
