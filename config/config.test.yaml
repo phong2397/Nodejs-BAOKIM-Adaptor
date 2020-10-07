@@ -1,6 +1,7 @@
 channelId: 1
 key: "wUhLDGWwKTvEiOSU"
-
+mongo:
+  url: "mongodb://pdladmin:sgftpdl66PDC.2020%24%24@150.95.115.104:27017/sgfpdldb"
 baokim:
   bankNo: "970403"
   urlPayment: "https://sandbox-api.baokim.vn/payment"
