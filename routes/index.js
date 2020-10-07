@@ -5,7 +5,6 @@ var router = express.Router();
 var util = require("../utils/util");
 var fs = require("fs");
 var baokim = require("../services/virtual-account");
-var logger = require("../utils/winston/winston");
 var appRootPath = require("app-root-path");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
