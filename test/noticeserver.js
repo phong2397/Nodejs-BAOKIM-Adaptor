@@ -14,7 +14,7 @@ describe("BAOKIM", () => {
     //Before each test we empty the database in your case
     done();
   });
-  context("POST /collectatpoint  ", () => {
+  context("POST /collectionatpoint  ", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BK5F7AEC006D41F191L9",
@@ -26,7 +26,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/collectatpoint")
+        .post("/collectionatpoint")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -57,7 +57,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/collectatpoint")
+        .post("/transaction")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -67,7 +67,7 @@ describe("BAOKIM", () => {
         });
     });
   });
-  context("POST /notifycollection  ", () => {
+  context("POST /transaction", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BK4c3fe101e2742fa",
@@ -87,7 +87,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifycollection")
+        .post("/transaction")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -115,7 +115,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifycollection")
+        .post("/transaction")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);
@@ -125,7 +125,7 @@ describe("BAOKIM", () => {
         });
     });
   });
-  context("POST /notifybankSwitch ", () => {
+  context("POST /bankswitch ", () => {
     it("Must be success", (done) => {
       let data = {
         RequestId: "BKf7690e177a641f1",
@@ -139,7 +139,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifybankswitch")
+        .post("/bankswitch")
         .set({
           Signature:
             "NgAaXjFlFR4RqZuEoZ7sQLEm+/j9jAmvsNvS3+DokSfgJ0EYyrWZ1JJu4wEJQdHErZjN4xtvX5F6q3HQJEmneJ4BDk+YSEnKuPwBbGFpyb2YdbAoKj4ASw8J+igps/W9Qze7HX1Hpu5EG452YcWx6BOlJm16DZ3LPImIlLviAsE=",
@@ -170,7 +170,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/notifybankswitch")
+        .post("/bankswitch")
         .set({
           Signature:
             "SgAaXjFlFR4RqZuEoZ7sQLEm+/j9jAmvsNvS3+DokSfgJ0EYyrWZ1JJu4wEJQdHErZjN4xtvX5F6q3HQJEmneJ4BDk+YSEnKuPwBbGFpyb2YdbAoKj4ASw8J+igps/W9Qze7HX1Hpu5EG452YcWx6BOlJm16DZ3LPImIlLviAsE=",

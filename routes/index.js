@@ -32,7 +32,7 @@ const MESSAGE = {
   },
 };
 
-router.post("/collectatpoint", async function (req, res, next) {
+router.post("/collectionatpoint", async function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -89,7 +89,7 @@ router.post("/collectatpoint", async function (req, res, next) {
   responseData.Signature = signature;
   return res.status(200).json(responseData);
 });
-router.post("/notifycollection", function (req, res, next) {
+router.post("/transaction", function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
@@ -134,7 +134,7 @@ router.post("/notifycollection", function (req, res, next) {
     Signature: signature,
   });
 });
-router.post("/notifybankswitch", function (req, res, next) {
+router.post("/bankswitch", function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
