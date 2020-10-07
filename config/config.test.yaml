@@ -17,13 +17,16 @@ baokim:
     url: ""
     urlapptest: "http://210.245.80.186:9095/Sandbox/FirmBanking"
     # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
+    partnercode: "VAYSV"
     data: "config/disbursement-data.json"
-    privatekey: "key/vaysv/private.pem"
-    publickey: "key/vaysv/public.pem"
+    privatekey: "key/test/vaysv/private.pem"
+    publickey: "key/test/vaysv/public.pem"
   virtualaccount:
     url: "http://210.245.80.186:8085/Sandbox/Collection/V2"
-    privatekey: "key/private.pem"
-    publickey: "key/public.pem"
+    privatekey: "key/test/private.pem"
+    publickey:
+      sfg: "key/test/public.pem"
+      baokim: "key/test/public.pem"
     partnercode: "VAYSV"
     operation:
       create: 9001

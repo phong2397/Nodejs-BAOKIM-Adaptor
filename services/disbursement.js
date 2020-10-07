@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const fs = require("fs");
 const appRootPath = require("app-root-path");
 const { config } = require(`${appRootPath}/config/config`);
-
+const PARTNERCODE = config.baokim.disbursement.partnercode;
 const data = JSON.parse(fs.readFileSync(config.baokim.disbursement.data));
 const privateKey = fs.readFileSync(config.baokim.disbursement.privatekey);
 const publicKey = fs.readFileSync(config.baokim.disbursement.publickey);
@@ -55,6 +55,7 @@ function setCheckUserInfoData(requestData) {
   let dataSign = `${id}|${timeRequest}|${data.CheckUserInfomation.PartnerCode}|${data.CheckUserInfomation.Operation}|${bankno}|${accno}|${data.CheckUserInfomation.AccType}`;
   data.CheckUserInfomation.RequestId = id;
   data.CheckUserInfomation.RequestTime = timeRequest;
+  data.CheckUserInfomation.PartnerCode = PARTNERCODE;
   data.CheckUserInfomation.BankNo = bankno;
   data.CheckUserInfomation.AccNo = accno;
   data.CheckUserInfomation.Signature = createSignature(dataSign, privateKey);
@@ -80,6 +81,7 @@ function setTransfer(requestData) {
   data.MoneyTransfer.RequestId = id;
   data.MoneyTransfer.RequestTime = timeRequest;
   data.MoneyTransfer.ReferenceId = referenceId;
+  data.MoneyTransfer.PartnerCode = PARTNERCODE;
   data.MoneyTransfer.BankNo = bankno;
   data.MoneyTransfer.AccNo = accno;
   data.MoneyTransfer.RequestAmount = requestamount;
@@ -102,6 +104,7 @@ function setCheckTransStatus(requestData) {
 
   data.CheckTransactionStatus.RequestId = id;
   data.CheckTransactionStatus.RequestTime = timeRequest;
+  data.CheckTransactionStatus.PartnerCode = PARTNERCODE;
   data.CheckTransactionStatus.ReferenceId = refid;
   data.CheckTransactionStatus.Signature = createSignature(dataSign, privateKey);
 

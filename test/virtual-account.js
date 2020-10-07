@@ -5,9 +5,10 @@ let virtualAccount = require("../services/virtual-account");
 let moment = require("moment");
 let { v4: uuidv4 } = require("uuid");
 let fs = require("fs");
-let publicKeyBK = fs.readFileSync("./key/baokim/public.pem", "utf-8");
-let privateKey = fs.readFileSync("./key/private.pem", "utf-8");
-let publicKey = fs.readFileSync("./key/public.pem", "utf-8");
+let { config } = require("../config/config");
+let publicKeyBK = fs.readFileSync(
+  config.baokim.virtualaccount.publickey.baokim
+);
 let chai = require("chai");
 const util = require("../utils/util");
 let expect = chai.expect;

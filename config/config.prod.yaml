@@ -1,17 +1,37 @@
-key: 'wUhLDGWwKTvEiOSU'
-
+channelId: 1
+key: "wUhLDGWwKTvEiOSU"
+mongo:
+  url: "mongodb://pdladmin:sgftpdl66PDC.2020%24%24@150.95.115.104:27017/sgfpdldb"
 baokim:
-  bankNo: '970403'
-  url: 'https://chihobaokim.megacard.vn:3669'
-  privatekey: 'keyRSA/private.pem'
-  publickey: 'keyRSA/public.pem'
+  bankNo: "970403"
+  urlPayment: "https://sandbox-api.baokim.vn/payment"
+  privatekey: "key/private.pem"
+  publickey: "key/public.pem"
   accType:
     account: 1
     card: 0
   operation:
     transferMoney: 9002
     checkTransaction: 9003
-
-geerong:
-  pmcHost: http://payment-test1.niwodai.net
-  pmcGatewayUrl: http://payment-test1.niwodai.net/pmc-gateway/abroad/process
+  disbursement:
+    url: "http://210.245.83.82:9095/Golive/FirmBanking"
+    urlapptest: "http://210.245.83.82:9095/Golive/FirmBanking"
+    # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
+    partnercode: "SGFT3"
+    data: "config/disbursement-data.json"
+    privatekey: "key/production/sfg/private.pem"
+    publickey: "key/production/sfg/public.pem"
+  virtualaccount:
+    url: "http://210.245.80.27:9092/Golive/Collection/V2"
+    privatekey: "key/production/sfg/private.pem"
+    publickey:
+      sfg: "key/production/sfg/private.pem"
+      baokim: "key/production/baokim/private.pem"
+    partnercode: "SGFT3"
+    operation:
+      create: 9001
+      update: 9002
+      search: 9003
+      transaction: 9004
+    settings:
+      createtype: 2

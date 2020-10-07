@@ -6,8 +6,10 @@ const axios = require("axios");
 const moment = require("moment");
 const mongoose = require("mongoose");
 const { config } = require(`${appRootPath}/config/config`);
-const privateKey = fs.readFileSync(`${appRootPath}/key/private.pem`);
-const publickey = fs.readFileSync(`${appRootPath}/key/public.pem`);
+const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
+const publickey = fs.readFileSync(
+  config.baokim.virtualaccount.publickey.baokim
+);
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
 const OPERATION_CREATE = config.baokim.virtualaccount.operation.create; // CREATE VA
 const OPERATION_UPDATE = config.baokim.virtualaccount.operation.update; // UPDATE VA

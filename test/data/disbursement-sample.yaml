@@ -1,10 +1,10 @@
 checkUserInfo:
-    BankNo: '970457'
-    AccNo: '100100132448'
+  BankNo: "970457"
+  AccNo: "100100132448"
 transfer:
-    BankNo: '970457'
-    AccNo: '100100132448'
-    RequestAmount: "1000000"
-    Memo: 'Test chuyen tien'
+  BankNo: "970457"
+  AccNo: "100100132448"
+  RequestAmount: "50000"
+  Memo: "Test chuyen tien"
 checkTransStatus:
-    ReferenceId: null
+  ReferenceId: null

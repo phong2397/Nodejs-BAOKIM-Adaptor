@@ -3,12 +3,12 @@ const moment = require("moment-timezone");
 const express = require("express");
 const router = express.Router();
 const util = require("../utils/util");
-("");
+const { config } = require("../config/config");
 const fs = require("fs");
 const appRootPath = require("app-root-path");
-const privateKey = fs.readFileSync(`${appRootPath}/key/private.pem`);
-const publickey = fs.readFileSync(`${appRootPath}/key/public.pem`);
-const baoKimPublicKey = fs.readFileSync(`${appRootPath}/key/baokim/public.pem`);
+const privateKey = config.baokim.virtualaccount.privatekey;
+const publickey = config.baokim.virtualaccount.publickey.sfg;
+const baoKimPublicKey = config.baokim.virtualaccount.publickey.baokim;
 const virtualAccount = require("../services/virtual-account");
 
 //Need test
