@@ -2,16 +2,12 @@ const request = require("request");
 const date = require("date-and-time");
 const crypto = require("crypto");
 const fs = require("fs");
-const yaml = require("js-yaml");
-var config = yaml.safeLoad(
-  fs.readFileSync("./config/config copy.yaml", "utf8")
-);
+const appRootPath = require("app-root-path");
+const { config } = require(`${appRootPath}/config/config`);
 
-const data = JSON.parse(fs.readFileSync(config.disbursement.data));
-const privateKey = fs.readFileSync(config.disbursement.privatekey);
-const publicKey = fs.readFileSync(config.disbursement.publickey);
-
-// console.log(privateKey.toString());
+const data = JSON.parse(fs.readFileSync(config.baokim.disbursement.data));
+const privateKey = fs.readFileSync(config.baokim.disbursement.privatekey);
+const publicKey = fs.readFileSync(config.baokim.disbursement.publickey);
 
 function createSignature(requestText, privateKey) {
   const sign = crypto.createSign("RSA-SHA1");

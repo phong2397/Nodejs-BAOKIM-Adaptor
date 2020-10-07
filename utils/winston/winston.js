@@ -25,8 +25,22 @@ var options = {
     colorize: true,
   },
 };
+var loggerConsole = (_label) => {
+  var _logger = winston.createLogger({
+    format: combine(label({ label: _label }), timestamp(), consoleFormat),
+    transports: [new winston.transports.Console()],
+    exitOnError: false, // do not exit on handled exceptions
+  });
 
-var logger = (_label) => {
+  _logger.stream = {
+    write: function (message, encoding) {
+      // use the 'info' log level so the output will be picked up by both transports (file and console)
+      _logger.info(message.replace(/\r?\n|\r/g, " "));
+    },
+  };
+  return _logger;
+};
+var loggerFile = (_label) => {
   var _logger = winston.createLogger({
     format: combine(label({ label: _label }), timestamp(), consoleFormat),
     transports: [
@@ -39,7 +53,6 @@ var logger = (_label) => {
         maxSize: "20m",
       }),
       new winston.transports.File(options.file),
-      new winston.transports.Console(),
     ],
     exitOnError: false, // do not exit on handled exceptions
   });
@@ -53,4 +66,4 @@ var logger = (_label) => {
   return _logger;
 };
 
-module.exports = logger;
+module.exports = { loggerConsole, loggerFile };

@@ -5,9 +5,9 @@ let virtualAccount = require("../services/virtual-account");
 let moment = require("moment");
 let { v4: uuidv4 } = require("uuid");
 let fs = require("fs");
-let publicKeyBK = fs.readFileSync("./keyRSA/baokim/public.pem", "utf-8");
-let privateKey = fs.readFileSync("./keyRSA/private.pem", "utf-8");
-let publicKey = fs.readFileSync("./keyRSA/public.pem", "utf-8");
+let publicKeyBK = fs.readFileSync("./key/baokim/public.pem", "utf-8");
+let privateKey = fs.readFileSync("./key/private.pem", "utf-8");
+let publicKey = fs.readFileSync("./key/public.pem", "utf-8");
 let chai = require("chai");
 const util = require("../utils/util");
 let expect = chai.expect;
@@ -90,7 +90,7 @@ describe("Baokim", () => {
       expect(respUpdate.data.ResponseCode).to.equal(200);
       expect(respUpdate.data.ResponseMessage).to.equal("Success");
     });
-    it("Test verify signature", async () => {
+    it("Signature must be verified", async () => {
       let data = {
         RequestId: "BKc8718339ab814ed",
         RequestTime: "2020-10-02 11:56:41",

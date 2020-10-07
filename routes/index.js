@@ -7,26 +7,26 @@ var fs = require("fs");
 var baokim = require("../services/virtual-account");
 var logger = require("../utils/winston/winston");
 var appRootPath = require("app-root-path");
-var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
-var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
-var baoKimPublicKey = fs.readFileSync(
-  `${appRootPath}/keyRSA/baokim/public.pem`
-);
-var MSG_ACCOUNT_ERROR = {
-  ResponseCode: 111,
-  ResponseMessage: "AccNo is incorrect",
-};
-var MSG_ACCOUNT_NOT_EXIST = {
-  ResponseCode: 112,
-  ResponseMessage: "AccNo is not exist",
-};
-var MSG_FAIL_ERROR = {
-  ResponseCode: 120,
-  ResponseMessage: "Signature is incorrect",
-};
-var MSG_SIGN_ERROR = {
-  ResponseCode: 120,
-  ResponseMessage: "Signature is incorrect",
+var privateKey = fs.readFileSync(`${appRootPath}/key/private.pem`);
+var publickey = fs.readFileSync(`${appRootPath}/key/public.pem`);
+var baoKimPublicKey = fs.readFileSync(`${appRootPath}/key/baokim/public.pem`);
+const MESSAGE = {
+  ACCOUNT_INVALID: {
+    ResponseCode: 111,
+    ResponseMessage: "AccNo is incorrect",
+  },
+  ACCOUNT_NOT_EXIST: {
+    ResponseCode: 112,
+    ResponseMessage: "AccNo is not exist",
+  },
+  PROCESS_FAILED: {
+    ResponseCode: 120,
+    ResponseMessage: "Signature is incorrect",
+  },
+  SIGNATURE_INVALID: {
+    ResponseCode: 120,
+    ResponseMessage: "Signature is incorrect",
+  },
 };
 
 router.post("/collectatpoint", async function (req, res, next) {
@@ -52,19 +52,19 @@ router.post("/collectatpoint", async function (req, res, next) {
     accountNo: accountNo,
   };
   if (!requestInfo.Signature || !checkSignature) {
-    return res.status(200).json(MSG_SIGN_ERROR);
+    return res.status(200).json(MESSAGE.SIGNATURE_INVALID);
   }
   if (!accountNo) {
-    return res.status(200).json(MSG_ACCOUNT_ERROR);
+    return res.status(200).json(MESSAGE.ACCOUNT_INVALID);
   }
 
   //Collect data from database
   let responseSearch = await baokim.retriveVirtualAccount(requestSearch);
   if (!responseSearch.data) {
-    return res.status(200).json(MSG_FAIL_ERROR);
+    return res.status(200).json(MESSAGE.PROCESS_FAILED);
   }
   if (responseSearch.data.ResponseCode != 200) {
-    return res.status(200).json(MSG_ACCOUNT_NOT_EXIST);
+    return res.status(200).json(MESSAGE.ACCOUNT_NOT_EXIST);
   }
 
   let collectAmount = "100000";
@@ -111,7 +111,7 @@ router.post("/notifycollection", function (req, res, next) {
     baoKimPublicKey
   );
   if (!requestInfo.Signature || !checkSignature) {
-    return res.status(200).json(MSG_SIGN_ERROR);
+    return res.status(200).json(MESSAGE.SIGNATURE_INVALID);
   }
   // Verify Signature
   let responseCode = 200;
@@ -150,7 +150,7 @@ router.post("/notifybankswitch", function (req, res, next) {
   );
   //Check Signature
   if (!Signature || !checkSignature) {
-    return res.status(200).json(MSG_SIGN_ERROR);
+    return res.status(200).json(MESSAGE.SIGNATURE_INVALID);
   }
   let responseInfo = {
     ResponseCode: 200,

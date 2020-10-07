@@ -1,7 +1,0 @@
-disbursement:
-  url: ""
-  urlapptest: "http://210.245.80.186:9095/Sandbox/FirmBanking"
-  # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
-  data: "config/disbursement-data.json"
-  privatekey: "keyRSA/key-test-VAYSV/private.pem"
-  publickey: "keyRSA/key-test-VAYSV/public.pem"

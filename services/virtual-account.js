@@ -1,17 +1,18 @@
 require("dotenv").config();
-var fs = require("fs");
-var util = require("../utils/util");
-var appRootPath = require("app-root-path");
-var axios = require("axios");
-var { config } = require(`${appRootPath}/config/config`);
-var privateKey = fs.readFileSync(`${appRootPath}/keyRSA/private.pem`);
-var publickey = fs.readFileSync(`${appRootPath}/keyRSA/public.pem`);
-const PARTNERCODE = "VAYSV";
-const OPERATION_CREATE = 9001; // CREATE VA
-const OPERATION_UPDATE = 9002; // UPDATE VA
-const OPERATION_SEARCH = 9003; // SEARCH VA
-const OPERATION_TRANSACTION_SEARCH = 9004; // TRANSACTION SEARCH VA
-const CREATETYPE = 2; // BAOKIM AUTO GENERTATE ACCOUNT NO
+const fs = require("fs");
+const util = require("../utils/util");
+const appRootPath = require("app-root-path");
+const axios = require("axios");
+const { config } = require(`${appRootPath}/config/config`);
+const privateKey = fs.readFileSync(`${appRootPath}/key/private.pem`);
+const publickey = fs.readFileSync(`${appRootPath}/key/public.pem`);
+const PARTNERCODE = config.baokim.virtualaccount.partnercode;
+const OPERATION_CREATE = config.baokim.virtualaccount.operation.create; // CREATE VA
+const OPERATION_UPDATE = config.baokim.virtualaccount.operation.update; // UPDATE VA
+const OPERATION_SEARCH = config.baokim.virtualaccount.operation.search; // SEARCH VA
+const OPERATION_TRANSACTION_SEARCH =
+  config.baokim.virtualaccount.operation.transaction; // TRANSACTION SEARCH VA
+const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
 
 var registerVirtualAccount = async (requestInfo) => {
   let requestBody = {
@@ -33,7 +34,9 @@ var registerVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.url, requestBody, { headers });
+  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+    headers,
+  });
   return res;
 };
 var updateVirtualAccount = async (requestInfo) => {
@@ -59,7 +62,9 @@ var updateVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.url, requestBody, { headers });
+  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+    headers,
+  });
   return res;
 };
 var retriveVirtualAccount = async (requestInfo) => {
@@ -75,7 +80,9 @@ var retriveVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.url, requestBody, { headers });
+  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+    headers,
+  });
   return res;
 };
 

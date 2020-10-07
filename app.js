@@ -3,16 +3,15 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var loggerBody = require("morgan-body");
-var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var disbursementsRoute = require("./routes/disbursement");
-var loggerWinston = require("./utils/winston/winston");
+var logger = require("./utils/winston/winston");
 var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-// log request - response
+//File log
 loggerBody(app, {
   logReqHeaderList: true,
   logAllReqHeader: true,
@@ -22,7 +21,24 @@ loggerBody(app, {
   noColors: true,
   prettify: false,
   stream: {
-    write: (message) => loggerWinston("LOGGER").info(message),
+    write: (message, encoding) => {
+      logger.loggerFile("LOGGER").info(message);
+    },
+  },
+});
+//Console log
+loggerBody(app, {
+  logReqHeaderList: true,
+  logAllReqHeader: true,
+  logResHeaderList: true,
+  logAllResHeader: true,
+  logReqDateTime: false,
+  noColors: false,
+  prettify: false,
+  stream: {
+    write: (message, encoding) => {
+      logger.loggerConsole("LOGGER").info(message);
+    },
   },
 });
 
@@ -41,12 +57,11 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  loggerWinston(`${req.path}`).error(`${err}`);
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+  res
+    .status(err.status || 500)
+    .json({ status: err.status, message: err.message });
 });
 
 module.exports = app;
