@@ -26,7 +26,7 @@ describe("BAOKIM", () => {
       };
       chai
         .request(server)
-        .post("/collectionatpoint")
+        .post("/collectatpoint")
         .send(data)
         .end((err, res) => {
           res.should.have.status(200);

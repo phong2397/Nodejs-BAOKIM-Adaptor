@@ -32,7 +32,7 @@ const MESSAGE = {
   },
 };
 
-router.post("/collectionatpoint", async function (req, res, next) {
+router.post("/collectatpoint", async function (req, res, next) {
   let requestInfo = {
     RequestId: req.body.RequestId,
     RequestTime: req.body.RequestTime,
