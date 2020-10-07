@@ -17,3 +17,11 @@
 > npm i
 
 > npm test
+
+### With Docker
+
+**Usage:**
+
+> docker-compose build
+
+> docker-compose up -d
