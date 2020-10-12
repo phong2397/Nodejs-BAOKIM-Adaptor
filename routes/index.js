@@ -8,7 +8,6 @@ var baokim = require("../services/virtual-account");
 var appRootPath = require("app-root-path");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
-const publickey = fs.readFileSync(config.baokim.virtualaccount.publickey.sfg);
 var baoKimPublicKey = fs.readFileSync(
   config.baokim.virtualaccount.publickey.baokim
 );

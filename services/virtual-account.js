@@ -92,6 +92,8 @@ var registerVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
+  console.log(process.env.NODE_ENV);
+  console.log("VA URL", config.baokim.virtualaccount.url);
   let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
     headers,
   });

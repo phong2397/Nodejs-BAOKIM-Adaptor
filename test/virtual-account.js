@@ -1,5 +1,5 @@
 //During the test the env variable is set to test
-process.env.NODE_ENV = "test";
+process.env.NODE_ENV = "production";
 
 let virtualAccount = require("../services/virtual-account");
 let moment = require("moment");
@@ -16,6 +16,37 @@ let expect = chai.expect;
 describe("Baokim", () => {
   beforeEach((done) => {
     done();
+  });
+  describe("Product Test Script", () => {
+    it.only("VA must be found", async () => {
+      let requestInfo = {
+        requestId: `BK${moment().format("x")}`,
+        requestTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        accountName: "Tran Gia Bao",
+        amountMin: "50000",
+        amountMax: "1000000",
+        expireDate: moment().add(1, "days").format("YYYY-MM-DD HH:mm:ss"),
+        orderId: `OD${moment().format("YYYYMMDDHHMMSS")}`,
+      };
+      let resp = await virtualAccount.registerVirtualAccount(requestInfo);
+      expect(resp.status).to.equal(200);
+      expect(resp.data).to.not.equal(undefined);
+      expect(resp.data.ResponseCode).to.equal(200);
+      expect(resp.data.ResponseMessage).to.equal("Success");
+      let accNo = resp.data.AccountInfo.BANK.AccNo;
+      let requestSearch = {
+        requestId: `BK${moment().format("x")}${Math.random(100)}`,
+        requestTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        accountNo: accNo,
+      };
+      let respSearch = await virtualAccount.retriveVirtualAccount(
+        requestSearch
+      );
+      expect(respSearch.status).to.equal(200);
+      expect(respSearch.data).to.not.equal(undefined);
+      expect(respSearch.data.ResponseCode).to.equal(200);
+      expect(respSearch.data.ResponseMessage).to.equal("Success");
+    });
   });
   describe("VA Test", () => {
     it("VA must be created", async () => {

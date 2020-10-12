@@ -19,14 +19,14 @@ baokim:
     # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
     partnercode: "SGFT3"
     data: "config/disbursement-data.json"
-    privatekey: "key/production/sfg/private.pem"
-    publickey: "key/production/sfg/public.pem"
+    privatekey: "key/production/sgf/private.pem"
+    publickey: "key/production/sgf/public.pem"
   virtualaccount:
     url: "http://210.245.80.27:9092/Golive/Collection/V2"
-    privatekey: "key/production/sfg/private.pem"
+    privatekey: "key/production/sgf/private.pem"
     publickey:
-      sfg: "key/production/sfg/private.pem"
-      baokim: "key/production/baokim/private.pem"
+      sfg: "key/production/sgf/public.pem"
+      baokim: "key/production/baokim/public.pem"
     partnercode: "SGFT3"
     operation:
       create: 9001
