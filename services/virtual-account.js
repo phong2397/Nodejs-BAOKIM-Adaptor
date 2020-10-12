@@ -20,7 +20,6 @@ const MONGO_URL = config.mongo.url;
 const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
 const COLLECTION_NAME = "virtualaccount";
 const virtualAccountSchema = require("../model/virtual-account");
-const { response } = require("../app");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 var createVirtualAccount = async function (
   accountName,
@@ -53,6 +52,8 @@ var createVirtualAccount = async function (
   let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
     headers,
   });
+  console.log("headers: ", headers);
+  console.log("body: ", requestBody);
   console.log(res.data);
   if (res.data) {
     let account = new VirtualAccount({

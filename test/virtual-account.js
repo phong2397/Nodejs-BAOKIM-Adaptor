@@ -18,7 +18,7 @@ describe("Baokim", () => {
     done();
   });
   describe("Product Test Script", () => {
-    it.only("VA must be found", async () => {
+    it("VA must be found", async () => {
       let requestInfo = {
         requestId: `BK${moment().format("x")}`,
         requestTime: moment().format("YYYY-MM-DD HH:mm:ss"),

@@ -1,5 +1,4 @@
 require("dotenv").config();
-process.env.NODE_ENV = "production";
 const yaml = require("js-yaml");
 const fs = require("fs");
 const appRootPath = require("app-root-path");
