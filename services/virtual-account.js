@@ -53,6 +53,7 @@ var createVirtualAccount = async function (
   let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
     headers,
   });
+  console.log(res.data);
   if (res.data) {
     let account = new VirtualAccount({
       requestId: requestId,
