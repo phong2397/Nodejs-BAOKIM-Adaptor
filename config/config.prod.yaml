@@ -25,7 +25,7 @@ baokim:
     url: "http://210.245.80.27:9092/Golive/Collection/V2"
     privatekey: "key/production/sgf/private.pem"
     publickey:
-      sfg: "key/production/sgf/public.pem"
+      sgf: "key/production/sgf/public.pem"
       baokim: "key/production/baokim/public.pem"
     partnercode: "SGFT3"
     operation:

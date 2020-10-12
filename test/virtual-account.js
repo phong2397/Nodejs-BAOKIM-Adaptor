@@ -9,6 +9,7 @@ let { config } = require("../config/config");
 let publicKeyBK = fs.readFileSync(
   config.baokim.virtualaccount.publickey.baokim
 );
+let publickey = fs.readFileSync(config.baokim.virtualaccount.publickey.sgf);
 let chai = require("chai");
 const util = require("../utils/util");
 let expect = chai.expect;
@@ -121,6 +122,29 @@ describe("Baokim", () => {
       expect(respUpdate.data).to.not.equal(undefined);
       expect(respUpdate.data.ResponseCode).to.equal(200);
       expect(respUpdate.data.ResponseMessage).to.equal("Success");
+    });
+    it.only("Check signature", () => {
+      let sign =
+        "l5rb5fi6Zqedn//FqN53uDhBoyJcxYq+SnIeF0gdugrCCC8qbnzZSE/GGjN5xYZ4VTodXGrfLcrhVqVZykBvu/XRCLPBvylaFLU9/h0KyTo3M6x0lFprZIOwGnHJleSklvI5Y5gR4X/b0gBNx5M03AwKfa1H/RwLWlZ1nfcEofg=";
+      let body = {
+        RequestId: "BK16024917055740.10316673915602581",
+        RequestTime: "2020-10-12 08:35:05",
+        PartnerCode: "SGFT3",
+        Operation: 9001,
+        CreateType: 2,
+        AccName: "SGF Test Account",
+        CollectAmountMin: "50000",
+        CollectAmountMax: "1000000",
+        OrderId: "OD20201012083505",
+        ExpireDate: "2020-10-15 08:35:05",
+      };
+      let verify = util.baokimVerifySignature(
+        JSON.stringify(body),
+        sign,
+        publickey
+      );
+      expect(verify).to.equal(true);
+      console.log("Check:", verify);
     });
     it("Signature must be verified", async () => {
       let data = {

@@ -89,7 +89,9 @@ var registerVirtualAccount = async (requestInfo) => {
   };
   if (requestInfo.expireDate) requestBody.ExpireDate = requestInfo.expireDate;
   //
-  let sign = util.createRSASignature(JSON.stringify(requestBody), privateKey);
+  let rawData = JSON.stringify(requestBody);
+  console.log(rawData);
+  let sign = util.createRSASignature(rawData, privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
