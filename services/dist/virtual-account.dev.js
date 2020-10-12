@@ -35,10 +35,13 @@ var COLLECTION_NAME = "virtualaccount";
 
 var virtualAccountSchema = require("../model/virtual-account");
 
+var _require2 = require("express"),
+    raw = _require2.raw;
+
 var VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 
 var createVirtualAccount = function createVirtualAccount(accountName, amountMin, amountMax, expireDate) {
-  var requestId, requestTime, orderId, requestBody, sign, headers, res, account, newAccount;
+  var requestId, requestTime, orderId, requestBody, rawData, sign, headers, res, account, newAccount;
   return regeneratorRuntime.async(function createVirtualAccount$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -59,24 +62,26 @@ var createVirtualAccount = function createVirtualAccount(accountName, amountMin,
           };
           if (expireDate) requestBody.ExpireDate = expireDate; //
 
-          sign = util.createRSASignature(JSON.stringify(requestBody), privateKey);
+          rawData = JSON.stringify(requestBody);
+          console.log(rawData);
+          sign = util.createRSASignature(rawData, privateKey);
           headers = {
             "Content-Type": "application/json",
             Signature: "".concat(sign)
           };
-          _context.next = 9;
+          _context.next = 11;
           return regeneratorRuntime.awrap(axios.post(config.baokim.virtualaccount.url, requestBody, {
             headers: headers
           }));
 
-        case 9:
+        case 11:
           res = _context.sent;
           console.log("headers: ", headers);
           console.log("body: ", requestBody);
           console.log(res.data);
 
           if (!res.data) {
-            _context.next = 21;
+            _context.next = 23;
             break;
           }
 
@@ -93,18 +98,18 @@ var createVirtualAccount = function createVirtualAccount(accountName, amountMin,
             useNewUrlParser: true,
             useUnifiedTopology: true
           });
-          _context.next = 18;
+          _context.next = 20;
           return regeneratorRuntime.awrap(account.save());
 
-        case 18:
+        case 20:
           newAccount = _context.sent;
           mongoose.disconnect();
           return _context.abrupt("return", newAccount);
 
-        case 21:
+        case 23:
           return _context.abrupt("return", null);
 
-        case 22:
+        case 24:
         case "end":
           return _context.stop();
       }
@@ -131,8 +136,8 @@ var registerVirtualAccount = function registerVirtualAccount(requestInfo) {
           };
           if (requestInfo.expireDate) requestBody.ExpireDate = requestInfo.expireDate; //
 
-          rawData = JSON.stringify(requestBody);
-          console.log(rawData);
+          rawData = JSON.stringify(requestBody); // console.log(rawData);
+
           sign = util.createRSASignature(rawData, privateKey);
           headers = {
             "Content-Type": "application/json",
@@ -140,16 +145,16 @@ var registerVirtualAccount = function registerVirtualAccount(requestInfo) {
           };
           console.log(process.env.NODE_ENV);
           console.log("VA URL", config.baokim.virtualaccount.url);
-          _context2.next = 10;
+          _context2.next = 9;
           return regeneratorRuntime.awrap(axios.post(config.baokim.virtualaccount.url, requestBody, {
             headers: headers
           }));
 
-        case 10:
+        case 9:
           res = _context2.sent;
           return _context2.abrupt("return", res);
 
-        case 12:
+        case 11:
         case "end":
           return _context2.stop();
       }

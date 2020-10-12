@@ -20,6 +20,7 @@ const MONGO_URL = config.mongo.url;
 const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
 const COLLECTION_NAME = "virtualaccount";
 const virtualAccountSchema = require("../model/virtual-account");
+const { raw } = require("express");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 var createVirtualAccount = async function (
   accountName,
@@ -44,7 +45,9 @@ var createVirtualAccount = async function (
   };
   if (expireDate) requestBody.ExpireDate = expireDate;
   //
-  let sign = util.createRSASignature(JSON.stringify(requestBody), privateKey);
+  let rawData = JSON.stringify(requestBody);
+  console.log(rawData);
+  let sign = util.createRSASignature(rawData, privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
@@ -90,7 +93,7 @@ var registerVirtualAccount = async (requestInfo) => {
   if (requestInfo.expireDate) requestBody.ExpireDate = requestInfo.expireDate;
   //
   let rawData = JSON.stringify(requestBody);
-  console.log(rawData);
+  // console.log(rawData);
   let sign = util.createRSASignature(rawData, privateKey);
   let headers = {
     "Content-Type": "application/json",
