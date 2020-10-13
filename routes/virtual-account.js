@@ -11,12 +11,12 @@ const publickey = config.baokim.virtualaccount.publickey.sfg;
 const baoKimPublicKey = config.baokim.virtualaccount.publickey.baokim;
 const virtualAccount = require("../services/virtual-account");
 
-//Need test
+//TOTO: Unit Test
 router.get("/", async function (req, res, next) {
   const { page = 1, limit = 10 } = req.query;
   return res.status(200).json({ msg: "WORKING..." });
 });
-//Need test
+//TODO: Unit Test
 router.get("/:accountNo", async function (req, res, next) {
   let accountNo = req.params.accountNo;
   if (!accountNo) {
@@ -29,7 +29,7 @@ router.get("/:accountNo", async function (req, res, next) {
     return res.status(404).json({ msg: "Not found" });
   }
 });
-//Need test
+//TOTO: Unit Test & Catch error when data response with error code
 router.post("/", async function (req, res, next) {
   let accountName = req.body.accountName;
   let amountMin = req.body.amountMin;
