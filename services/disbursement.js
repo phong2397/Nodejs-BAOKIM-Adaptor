@@ -1,4 +1,5 @@
 const request = require("request");
+const moment = require("moment-timezone");
 const date = require("date-and-time");
 const crypto = require("crypto");
 const fs = require("fs");
@@ -8,7 +9,10 @@ const PARTNERCODE = config.baokim.disbursement.partnercode;
 const data = JSON.parse(fs.readFileSync(config.baokim.disbursement.data));
 const privateKey = fs.readFileSync(config.baokim.disbursement.privatekey);
 const publicKey = fs.readFileSync(config.baokim.disbursement.publickey);
-
+const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
+var randomInteger = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 function createSignature(requestText, privateKey) {
   const sign = crypto.createSign("RSA-SHA1");
   sign.update(requestText);
@@ -47,11 +51,11 @@ function sendToPaymentgateway(url, reqData) {
 
 function setCheckUserInfoData(requestData) {
   let now = new Date();
-  let timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  let id =
-    "BK" +
-    date.format(now, "YYYYMMDDHHmmss") +
-    Math.floor(Math.random() * Math.floor(9));
+  let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
+  let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
+    100,
+    999
+  )}`;
   let bankno = requestData.BankNo;
   let accno = requestData.AccNo;
   let dataSign = `${id}|${timeRequest}|${data.CheckUserInfomation.PartnerCode}|${data.CheckUserInfomation.Operation}|${bankno}|${accno}|${data.CheckUserInfomation.AccType}`;
@@ -68,11 +72,12 @@ function setCheckUserInfoData(requestData) {
 
 function setTransfer(requestData) {
   let now = new Date();
-  let timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  let id =
-    "BK" +
-    date.format(now, "YYYYMMDDHHmmss") +
-    Math.floor(Math.random() * Math.floor(9));
+  let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
+  let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
+    100,
+    999
+  )}`;
+  Math.floor(Math.random() * Math.floor(9));
   let referenceId = id + Math.floor(Math.random() * Math.floor(99));
   let bankno = requestData.BankNo;
   let accno = requestData.AccNo;
@@ -96,11 +101,11 @@ function setTransfer(requestData) {
 
 function setCheckTransStatus(requestData) {
   const now = new Date();
-  const timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  const id =
-    "BK" +
-    date.format(now, "YYYYMMDDHHmmss") +
-    Math.floor(Math.random() * Math.floor(9));
+  let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
+  let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
+    100,
+    999
+  )}`;
   var refid = requestData.ReferenceId;
 
   const dataSign = `${id}|${timeRequest}|${data.CheckTransactionStatus.PartnerCode}|${data.CheckTransactionStatus.Operation}|${refid}`;
