@@ -1,6 +1,7 @@
 require("dotenv").config();
 const fs = require("fs");
 const util = require("../utils/util");
+const { requestFactory } = require("../utils/baokim/baokim-utils");
 const appRootPath = require("app-root-path");
 const axios = require("axios");
 const moment = require("moment-timezone");
@@ -19,53 +20,38 @@ const OPERATION_TRANSACTION_SEARCH =
 const MONGO_URL = config.mongo.url;
 const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
 const COLLECTION_NAME = "virtualaccount";
-const virtualAccountSchema = require("../model/virtual-account");
-const { raw } = require("express");
+const virtualAccountSchema = require("virtual-account");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
-
 var randomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 var createVirtualAccount = async function (
-  accountName,
+  accName,
   amountMin,
   amountMax,
   expireDate
 ) {
-  let requestId = `BK${moment()
-    .tz(TIMEZONE_VN)
-    .format("YYYYMMDD")}${randomInteger(100, 999)}`;
-  let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
-  let orderId = `OD${moment().format("YYYYMMDDHHmmss")}`;
-
-  let requestBody = {
-    RequestId: requestId,
-    RequestTime: requestTime,
-    PartnerCode: PARTNERCODE,
-    Operation: OPERATION_CREATE,
-    CreateType: CREATETYPE,
-    AccName: accountName,
-    CollectAmountMin: amountMin,
-    CollectAmountMax: amountMax,
-    OrderId: orderId,
-  };
-  if (expireDate) requestBody.ExpireDate = expireDate;
-  //
-  let rawData = JSON.stringify(requestBody);
-  console.log(rawData);
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    OPERATION_CREATE,
+    {
+      accName,
+      amountMin,
+      amountMax,
+      expireDate,
+    }
+  );
   let sign = util.createRSASignature(rawData, privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+  let res = await axios.post(config.baokim.virtualaccount.url, requestInfo, {
     headers,
   });
-  console.log("headers: ", headers);
-  console.log("body: ", requestBody);
-  console.log(res.data);
+
   if (res.data) {
     let account = new VirtualAccount({
       requestId: requestId,

@@ -3,6 +3,8 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = "production";
 
+var baokimUtils = require("../utils/baokim/baokim-utils");
+
 var virtualAccount = require("../services/virtual-account");
 
 var moment = require("moment");
@@ -204,11 +206,9 @@ describe("Baokim", function () {
       });
     });
     it.only("Check signature", function () {
-      var sign = "Esf1SfKz9bh78e5u48PRKFGd8UGCbS9IlqFwVlJqgkAgAUNq0Ya2f8/lvtEwv5e/MfQKSqV+B+x4EWB4e7lbWckeAiD0EBIUX0q3/kPqgZ1hav2iU2bzbU89Id09Rld/HwrWFZaFgsYeBT5cl0V5Aesy5UgfuvWvVMZE5z5WMdI=";
-      var dataSign = "BK202010130406585|2020-10-13 04:06:58|SGFT3|9001|970436|0091000624118|0";
-      var signMustBe = util.createRSASignature(dataSign, privatekey);
-      console.log(signMustBe);
-      var check = util.baokimVerifySignature(dataSign, sign, publickey);
+      var sign = "FPOJpsz5cxkcfW9W3eOlMgRSWXCuzdqm711YD84FYLF3p16C2Ghx9qLUqqpXSu0gN3VOp9aChOOaAuBa0PixksDB2fS4UXYAyqDwEkBAC4edij4A0Vsl/EtarIpX0vhQmn+V5TlfXH3fHw1B9x/O0Hk4yY3OjUt23jojKHyGkB4=";
+      var dataSign = "{\"RequestId\":\"BK31c54e1318d6255\",\"RequestTime\":\"2020-10-13 16:08:34\",\"PartnerCode\":\"BAOKIM\",\"AccName\":\"BK VAYSV\",\"AccNo\":\"00856293476\",\"ExpireDate\":\"2020-10-01 13:34:26\",\"OrderId\":\"OD20200930130928\",\"BankShortName\":\"VPBANK\"}";
+      var check = util.baokimVerifySignature(dataSign, sign, publicKeyBK);
       expect(check).to.equal(true);
     });
     it("Signature must be verified", function _callee5() {

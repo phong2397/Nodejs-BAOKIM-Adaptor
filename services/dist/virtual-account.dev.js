@@ -6,6 +6,9 @@ var fs = require("fs");
 
 var util = require("../utils/util");
 
+var _require = require("../utils/baokim/baokim-utils"),
+    requestFactory = _require.requestFactory;
+
 var appRootPath = require("app-root-path");
 
 var axios = require("axios");
@@ -14,8 +17,8 @@ var moment = require("moment-timezone");
 
 var mongoose = require("mongoose");
 
-var _require = require("".concat(appRootPath, "/config/config")),
-    config = _require.config;
+var _require2 = require("".concat(appRootPath, "/config/config")),
+    config = _require2.config;
 
 var privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
 var publickey = fs.readFileSync(config.baokim.virtualaccount.publickey.baokim);
@@ -33,10 +36,7 @@ var CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUT
 
 var COLLECTION_NAME = "virtualaccount";
 
-var virtualAccountSchema = require("../model/virtual-account");
-
-var _require2 = require("express"),
-    raw = _require2.raw;
+var virtualAccountSchema = require("virtual-account");
 
 var VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 var TIMEZONE_VN = "Asia/Ho_Chi_Minh";
@@ -45,48 +45,33 @@ var randomInteger = function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var createVirtualAccount = function createVirtualAccount(accountName, amountMin, amountMax, expireDate) {
-  var requestId, requestTime, orderId, requestBody, rawData, sign, headers, res, account, newAccount;
+var createVirtualAccount = function createVirtualAccount(accName, amountMin, amountMax, expireDate) {
+  var requestInfo, sign, headers, res, account, newAccount;
   return regeneratorRuntime.async(function createVirtualAccount$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("YYYYMMDD")).concat(randomInteger(100, 999));
-          requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
-          orderId = "OD".concat(moment().format("YYYYMMDDHHmmss"));
-          requestBody = {
-            RequestId: requestId,
-            RequestTime: requestTime,
-            PartnerCode: PARTNERCODE,
-            Operation: OPERATION_CREATE,
-            CreateType: CREATETYPE,
-            AccName: accountName,
-            CollectAmountMin: amountMin,
-            CollectAmountMax: amountMax,
-            OrderId: orderId
-          };
-          if (expireDate) requestBody.ExpireDate = expireDate; //
-
-          rawData = JSON.stringify(requestBody);
-          console.log(rawData);
+          requestInfo = new requestFactory().createRequestInfo("virtualaccount", OPERATION_CREATE, {
+            accName: accName,
+            amountMin: amountMin,
+            amountMax: amountMax,
+            expireDate: expireDate
+          });
           sign = util.createRSASignature(rawData, privateKey);
           headers = {
             "Content-Type": "application/json",
             Signature: "".concat(sign)
           };
-          _context.next = 11;
-          return regeneratorRuntime.awrap(axios.post(config.baokim.virtualaccount.url, requestBody, {
+          _context.next = 5;
+          return regeneratorRuntime.awrap(axios.post(config.baokim.virtualaccount.url, requestInfo, {
             headers: headers
           }));
 
-        case 11:
+        case 5:
           res = _context.sent;
-          console.log("headers: ", headers);
-          console.log("body: ", requestBody);
-          console.log(res.data);
 
           if (!res.data) {
-            _context.next = 23;
+            _context.next = 14;
             break;
           }
 
@@ -103,18 +88,18 @@ var createVirtualAccount = function createVirtualAccount(accountName, amountMin,
             useNewUrlParser: true,
             useUnifiedTopology: true
           });
-          _context.next = 20;
+          _context.next = 11;
           return regeneratorRuntime.awrap(account.save());
 
-        case 20:
+        case 11:
           newAccount = _context.sent;
           mongoose.disconnect();
           return _context.abrupt("return", newAccount);
 
-        case 23:
+        case 14:
           return _context.abrupt("return", null);
 
-        case 24:
+        case 15:
         case "end":
           return _context.stop();
       }

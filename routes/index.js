@@ -141,7 +141,7 @@ router.post("/bankswitch", function (req, res, next) {
     AccNo: req.body.AccNo,
     ExpireDate: req.body.ExpireDate,
     OrderId: req.body.OrderId,
-    BankSortName: req.body.BankSortName,
+    BankShortName: req.body.BankSortName,
   };
   let Signature = req.headers.signature;
   let checkSignature = util.baokimVerifySignature(
