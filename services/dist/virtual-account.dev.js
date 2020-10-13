@@ -10,7 +10,7 @@ var appRootPath = require("app-root-path");
 
 var axios = require("axios");
 
-var moment = require("moment");
+var moment = require("moment-timezone");
 
 var mongoose = require("mongoose");
 
@@ -39,6 +39,7 @@ var _require2 = require("express"),
     raw = _require2.raw;
 
 var VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
+var TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 
 var createVirtualAccount = function createVirtualAccount(accountName, amountMin, amountMax, expireDate) {
   var requestId, requestTime, orderId, requestBody, rawData, sign, headers, res, account, newAccount;
@@ -46,8 +47,8 @@ var createVirtualAccount = function createVirtualAccount(accountName, amountMin,
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          requestId = "BK".concat(moment().format("x")).concat(Math.random(100));
-          requestTime = moment().format("YYYY-MM-DD HH:mm:ss");
+          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("x")).concat(Math.random(100));
+          requestTime = moment().tz(TIMEZONE_VN).format("x");
           orderId = "OD".concat(moment().format("YYYYMMDDHHmmss"));
           requestBody = {
             RequestId: requestId,
@@ -211,8 +212,8 @@ var getVirtualAccount = function getVirtualAccount(accountNo) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
-          requestId = "BK".concat(moment().format("x")).concat(Math.random(100));
-          requestTime = moment().format("YYYY-MM-DD HH:mm:ss");
+          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("x")).concat(Math.random(100));
+          requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
           requestInfo = {
             requestId: requestId,
             requestTime: requestTime,

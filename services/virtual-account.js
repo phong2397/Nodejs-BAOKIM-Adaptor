@@ -3,7 +3,7 @@ const fs = require("fs");
 const util = require("../utils/util");
 const appRootPath = require("app-root-path");
 const axios = require("axios");
-const moment = require("moment");
+const moment = require("moment-timezone");
 const mongoose = require("mongoose");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
@@ -22,14 +22,17 @@ const COLLECTION_NAME = "virtualaccount";
 const virtualAccountSchema = require("../model/virtual-account");
 const { raw } = require("express");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
+const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 var createVirtualAccount = async function (
   accountName,
   amountMin,
   amountMax,
   expireDate
 ) {
-  let requestId = `BK${moment().format("x")}${Math.random(100)}`;
-  let requestTime = moment().format("YYYY-MM-DD HH:mm:ss");
+  let requestId = `BK${moment().tz(TIMEZONE_VN).format("x")}${Math.random(
+    100
+  )}`;
+  let requestTime = moment().tz(TIMEZONE_VN).format("x");
   let orderId = `OD${moment().format("YYYYMMDDHHmmss")}`;
 
   let requestBody = {
@@ -135,8 +138,10 @@ var updateVirtualAccount = async (requestInfo) => {
   return res;
 };
 var getVirtualAccount = async (accountNo) => {
-  let requestId = `BK${moment().format("x")}${Math.random(100)}`;
-  let requestTime = moment().format("YYYY-MM-DD HH:mm:ss");
+  let requestId = `BK${moment().tz(TIMEZONE_VN).format("x")}${Math.random(
+    100
+  )}`;
+  let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let requestInfo = {
     requestId: requestId,
     requestTime: requestTime,
