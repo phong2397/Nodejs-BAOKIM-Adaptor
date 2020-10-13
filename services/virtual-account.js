@@ -32,7 +32,7 @@ var createVirtualAccount = async function (
   let requestId = `BK${moment().tz(TIMEZONE_VN).format("x")}${Math.random(
     100
   )}`;
-  let requestTime = moment().tz(TIMEZONE_VN).format("x");
+  let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let orderId = `OD${moment().format("YYYYMMDDHHmmss")}`;
 
   let requestBody = {

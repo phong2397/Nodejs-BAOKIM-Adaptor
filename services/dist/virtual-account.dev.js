@@ -48,7 +48,7 @@ var createVirtualAccount = function createVirtualAccount(accountName, amountMin,
       switch (_context.prev = _context.next) {
         case 0:
           requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("x")).concat(Math.random(100));
-          requestTime = moment().tz(TIMEZONE_VN).format("x");
+          requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
           orderId = "OD".concat(moment().format("YYYYMMDDHHmmss"));
           requestBody = {
             RequestId: requestId,
