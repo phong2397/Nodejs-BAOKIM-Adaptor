@@ -18,7 +18,7 @@ baokim:
     urlapptest: "http://210.245.83.82:9095/Golive/FirmBanking"
     # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
     partnercode: "SGFT3"
-    data: "config/disbursement-data.json"
+    data: "config/disbursement-data-production.json"
     privatekey: "key/production/sgf/private.pem"
     publickey: "key/production/sgf/public.pem"
   virtualaccount:
