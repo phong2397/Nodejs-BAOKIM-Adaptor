@@ -41,13 +41,17 @@ var _require2 = require("express"),
 var VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 var TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 
+var randomInteger = function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 var createVirtualAccount = function createVirtualAccount(accountName, amountMin, amountMax, expireDate) {
   var requestId, requestTime, orderId, requestBody, rawData, sign, headers, res, account, newAccount;
   return regeneratorRuntime.async(function createVirtualAccount$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("x")).concat(Math.random(100));
+          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("YYYYMMDD")).concat(randomInteger(100, 999));
           requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
           orderId = "OD".concat(moment().format("YYYYMMDDHHmmss"));
           requestBody = {
@@ -212,7 +216,7 @@ var getVirtualAccount = function getVirtualAccount(accountNo) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
-          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("x")).concat(Math.random(100));
+          requestId = "BK".concat(moment().tz(TIMEZONE_VN).format("YYYYMMDD")).concat(randomInteger(100, 999));
           requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
           requestInfo = {
             requestId: requestId,

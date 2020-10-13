@@ -23,15 +23,20 @@ const virtualAccountSchema = require("../model/virtual-account");
 const { raw } = require("express");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
+
+var randomInteger = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 var createVirtualAccount = async function (
   accountName,
   amountMin,
   amountMax,
   expireDate
 ) {
-  let requestId = `BK${moment().tz(TIMEZONE_VN).format("x")}${Math.random(
-    100
-  )}`;
+  let requestId = `BK${moment()
+    .tz(TIMEZONE_VN)
+    .format("YYYYMMDD")}${randomInteger(100, 999)}`;
   let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let orderId = `OD${moment().format("YYYYMMDDHHmmss")}`;
 
@@ -138,9 +143,9 @@ var updateVirtualAccount = async (requestInfo) => {
   return res;
 };
 var getVirtualAccount = async (accountNo) => {
-  let requestId = `BK${moment().tz(TIMEZONE_VN).format("x")}${Math.random(
-    100
-  )}`;
+  let requestId = `BK${moment()
+    .tz(TIMEZONE_VN)
+    .format("YYYYMMDD")}${randomInteger(100, 999)}`;
   let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let requestInfo = {
     requestId: requestId,
