@@ -6,10 +6,9 @@ let moment = require("moment");
 let { v4: uuidv4 } = require("uuid");
 let fs = require("fs");
 let { config } = require("../config/config");
-let publicKeyBK = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim
-);
-let publickey = fs.readFileSync(config.baokim.virtualaccount.publickey.sgf);
+let publicKeyBK = fs.readFileSync(config.baokim.disbursement.publickey);
+let publickey = fs.readFileSync(config.baokim.disbursement.publickey);
+let privatekey = fs.readFileSync(config.baokim.disbursement.privatekey);
 let chai = require("chai");
 const util = require("../utils/util");
 let expect = chai.expect;
@@ -125,26 +124,12 @@ describe("Baokim", () => {
     });
     it.only("Check signature", () => {
       let sign =
-        "l5rb5fi6Zqedn//FqN53uDhBoyJcxYq+SnIeF0gdugrCCC8qbnzZSE/GGjN5xYZ4VTodXGrfLcrhVqVZykBvu/XRCLPBvylaFLU9/h0KyTo3M6x0lFprZIOwGnHJleSklvI5Y5gR4X/b0gBNx5M03AwKfa1H/RwLWlZ1nfcEofg=";
-      let body = {
-        RequestId: "BK16024917055740.10316673915602581",
-        RequestTime: "2020-10-12 08:35:05",
-        PartnerCode: "SGFT3",
-        Operation: 9001,
-        CreateType: 2,
-        AccName: "SGF Test Account",
-        CollectAmountMin: "50000",
-        CollectAmountMax: "1000000",
-        OrderId: "OD20201012083505",
-        ExpireDate: "2020-10-15 08:35:05",
-      };
-      let verify = util.baokimVerifySignature(
-        JSON.stringify(body),
-        sign,
-        publickey
-      );
-      expect(verify).to.equal(true);
-      console.log("Check:", verify);
+        "TOcekFVoRIfji7bIwAKMsfqX7lf+UouS76TJPNYmz/qzPHt+pY8kx6ENetGpTNDNC8jcNbQ9q2sbIs4IUO2DVm+luKCtNK1xt5nClu9txLOepj6iirDM9OelNloF4JPkgpItxbseyCrEvIUVgEy7NKCL4mbg2TS1X6OiSy5LV+A=";
+      let dataSign = `BK202010130350010|2020-10-13 03:50:01|SGFT3|9001|970436|0091000624118|0`;
+      let signMustBe = util.createRSASignature(dataSign, privatekey);
+      console.log(signMustBe);
+      let check = util.baokimVerifySignature(dataSign, sign, publickey);
+      expect(check).to.equal(true);
     });
     it("Signature must be verified", async () => {
       let data = {

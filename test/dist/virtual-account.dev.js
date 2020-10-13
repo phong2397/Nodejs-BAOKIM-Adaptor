@@ -15,8 +15,9 @@ var fs = require("fs");
 var _require2 = require("../config/config"),
     config = _require2.config;
 
-var publicKeyBK = fs.readFileSync(config.baokim.virtualaccount.publickey.baokim);
-var publickey = fs.readFileSync(config.baokim.virtualaccount.publickey.sgf);
+var publicKeyBK = fs.readFileSync(config.baokim.disbursement.publickey);
+var publickey = fs.readFileSync(config.baokim.disbursement.publickey);
+var privatekey = fs.readFileSync(config.baokim.disbursement.privatekey);
 
 var chai = require("chai");
 
@@ -203,22 +204,12 @@ describe("Baokim", function () {
       });
     });
     it.only("Check signature", function () {
-      var sign = "l5rb5fi6Zqedn//FqN53uDhBoyJcxYq+SnIeF0gdugrCCC8qbnzZSE/GGjN5xYZ4VTodXGrfLcrhVqVZykBvu/XRCLPBvylaFLU9/h0KyTo3M6x0lFprZIOwGnHJleSklvI5Y5gR4X/b0gBNx5M03AwKfa1H/RwLWlZ1nfcEofg=";
-      var body = {
-        RequestId: "BK16024917055740.10316673915602581",
-        RequestTime: "2020-10-12 08:35:05",
-        PartnerCode: "SGFT3",
-        Operation: 9001,
-        CreateType: 2,
-        AccName: "SGF Test Account",
-        CollectAmountMin: "50000",
-        CollectAmountMax: "1000000",
-        OrderId: "OD20201012083505",
-        ExpireDate: "2020-10-15 08:35:05"
-      };
-      var verify = util.baokimVerifySignature(JSON.stringify(body), sign, publickey);
-      expect(verify).to.equal(true);
-      console.log("Check:", verify);
+      var sign = "TOcekFVoRIfji7bIwAKMsfqX7lf+UouS76TJPNYmz/qzPHt+pY8kx6ENetGpTNDNC8jcNbQ9q2sbIs4IUO2DVm+luKCtNK1xt5nClu9txLOepj6iirDM9OelNloF4JPkgpItxbseyCrEvIUVgEy7NKCL4mbg2TS1X6OiSy5LV+A=";
+      var dataSign = "BK202010130350010|2020-10-13 03:50:01|SGFT3|9001|970436|0091000624118|0";
+      var signMustBe = util.createRSASignature(dataSign, privatekey);
+      console.log(signMustBe);
+      var check = util.baokimVerifySignature(dataSign, sign, publickey);
+      expect(check).to.equal(true);
     });
     it("Signature must be verified", function _callee5() {
       var data, rawText, check;

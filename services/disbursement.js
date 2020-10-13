@@ -60,6 +60,7 @@ function setCheckUserInfoData(requestData) {
   data.CheckUserInfomation.PartnerCode = PARTNERCODE;
   data.CheckUserInfomation.BankNo = bankno;
   data.CheckUserInfomation.AccNo = accno;
+  console.log("rawData: ", dataSign);
   data.CheckUserInfomation.Signature = createSignature(dataSign, privateKey);
 
   return data.CheckUserInfomation;
