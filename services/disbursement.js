@@ -25,6 +25,8 @@ function verifySignature(responseText, signature, publicKey) {
 }
 
 function sendToPaymentgateway(url, reqData) {
+  console.log("Request: ", url);
+  console.log("Request Data: ", reqData);
   return new Promise(function (resolve, reject) {
     request(
       {
