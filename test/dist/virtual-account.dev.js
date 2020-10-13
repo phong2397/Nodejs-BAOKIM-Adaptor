@@ -15,7 +15,7 @@ var fs = require("fs");
 var _require2 = require("../config/config"),
     config = _require2.config;
 
-var publicKeyBK = fs.readFileSync(config.baokim.disbursement.publickey);
+var publicKeyBK = fs.readFileSync(config.baokim.virtualaccount.publickey.baokim);
 var publickey = fs.readFileSync(config.baokim.disbursement.publickey);
 var privatekey = fs.readFileSync(config.baokim.disbursement.privatekey);
 
@@ -204,8 +204,8 @@ describe("Baokim", function () {
       });
     });
     it.only("Check signature", function () {
-      var sign = "TOcekFVoRIfji7bIwAKMsfqX7lf+UouS76TJPNYmz/qzPHt+pY8kx6ENetGpTNDNC8jcNbQ9q2sbIs4IUO2DVm+luKCtNK1xt5nClu9txLOepj6iirDM9OelNloF4JPkgpItxbseyCrEvIUVgEy7NKCL4mbg2TS1X6OiSy5LV+A=";
-      var dataSign = "BK202010130350010|2020-10-13 03:50:01|SGFT3|9001|970436|0091000624118|0";
+      var sign = "Esf1SfKz9bh78e5u48PRKFGd8UGCbS9IlqFwVlJqgkAgAUNq0Ya2f8/lvtEwv5e/MfQKSqV+B+x4EWB4e7lbWckeAiD0EBIUX0q3/kPqgZ1hav2iU2bzbU89Id09Rld/HwrWFZaFgsYeBT5cl0V5Aesy5UgfuvWvVMZE5z5WMdI=";
+      var dataSign = "BK202010130406585|2020-10-13 04:06:58|SGFT3|9001|970436|0091000624118|0";
       var signMustBe = util.createRSASignature(dataSign, privatekey);
       console.log(signMustBe);
       var check = util.baokimVerifySignature(dataSign, sign, publickey);

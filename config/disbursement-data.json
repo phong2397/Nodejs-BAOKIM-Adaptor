@@ -1,35 +1,10 @@
 {
-    "CheckUserInfomation": {
-        "RequestId": "",
-        "RequestTime": "",
-        "PartnerCode": "VAYSV",
-        "Operation": 9001,
-        "BankNo": "970403",
-        "AccNo": "070009223159",
-        "AccType": "0",
-        "Signature": ""
-    },
-    "MoneyTransfer": {
-        "RequestId": "",
-        "RequestTime": "",
-        "PartnerCode": "VAYSV",
-        "Operation": 9002,
-        "ReferenceId": "",
-        "BankNo": "970403",
-        "AccNo": "070009223159",
-        "AccType": "0",
-        "RequestAmount": "900000",
-        "Memo": "memo test chuyen tien",
-        "AccountName": "CONG TY TNHH THIET KE ZIOVI",
-        "ContractNumber": "123456789",
-        "Signature": ""
-    },
-    "CheckTransactionStatus": {
-        "RequestId": "",
-        "RequestTime": "",
-        "PartnerCode": "VAYSV",
-        "Operation": 9003,
-        "ReferenceId": "",
-        "Signature": ""
-    }
+    "RequestId": 'BK202010130406585',
+    "RequestTime": '2020-10-13 04: 06: 58',
+    "PartnerCode": 'SGFT3',
+    "Operation": 9001,
+    "BankNo": '970436',
+    "AccNo": '0091000624118',
+    "AccType": '0',
+    "Signature": 'Esf1SfKz9bh78e5u48PRKFGd8UGCbS9IlqFwVlJqgkAgAUNq0Ya2f8/lvtEwv5e/MfQKSqV+B+x4EWB4e7lbWckeAiD0EBIUX0q3/kPqgZ1hav2iU2bzbU89Id09Rld/HwrWFZaFgsYeBT5cl0V5Aesy5UgfuvWvVMZE5z5WMdI='
 }

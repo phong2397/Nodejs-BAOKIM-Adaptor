@@ -14,8 +14,8 @@ baokim:
     transferMoney: 9002
     checkTransaction: 9003
   disbursement:
-    url: "http://210.245.83.82:9095/Golive/FirmBanking"
-    urlapptest: "http://210.245.83.82:9095/Golive/FirmBanking"
+    url: "http://210.245.83.82:9095/Golive/FirmBanking/V2"
+    urlapptest: "http://210.245.83.82:9095/Golive/FirmBanking/V2"
     # urlapptest: 'http://13.250.110.81:9095/Sandbox/FirmBanking'
     partnercode: "SGFT3"
     data: "config/disbursement-data-production.json"
