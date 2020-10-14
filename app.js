@@ -13,14 +13,13 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //Axios Log
+//TODO: Need format logs
 axios.interceptors.request.use(x => {
-  // replace console with our logger of choice
   const headers = {
     common: x.headers.common,
     method: x.headers[x.method],
     headers: x.headers,
   };
-
   ["common", "get", "post", "head", "put", "patch", "delete"].forEach(
     header => {
       delete headers[header];
