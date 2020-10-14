@@ -15,8 +15,9 @@ services:
     container_name: baokim-adaptor-test
     build: .
     ports:
-      - "6000:3000"
+      - "3333:3333"
     environment:
+      - PORT=3333
       - NODE_ENV=test
     volumes:
       - "./logs-test:/app/logs"
