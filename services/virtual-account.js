@@ -1,15 +1,13 @@
 require("dotenv").config();
 const fs = require("fs");
 const util = require("../utils/util");
+const { requestFactory } = require("../utils/baokim/baokim-utils");
 const appRootPath = require("app-root-path");
 const axios = require("axios");
 const moment = require("moment-timezone");
 const mongoose = require("mongoose");
 const { config } = require(`${appRootPath}/config/config`);
-const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
-const publickey = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim
-);
+const privateKey = fs.readFileSync(config.baokim.privatekey);
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
 const OPERATION_CREATE = config.baokim.virtualaccount.operation.create; // CREATE VA
 const OPERATION_UPDATE = config.baokim.virtualaccount.operation.update; // UPDATE VA
@@ -18,75 +16,39 @@ const OPERATION_TRANSACTION_SEARCH =
   config.baokim.virtualaccount.operation.transaction; // TRANSACTION SEARCH VA
 const MONGO_URL = config.mongo.url;
 const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
-const COLLECTION_NAME = "virtualaccount";
-const virtualAccountSchema = require("../model/virtual-account");
-const { raw } = require("express");
-const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
-const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
-
+const COLLECT_URL = config.baokim.collectionUrl;
 var randomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 var createVirtualAccount = async function (
-  accountName,
+  accName,
   amountMin,
   amountMax,
-  expireDate
+  expireDate,
 ) {
-  let requestId = `BK${moment()
-    .tz(TIMEZONE_VN)
-    .format("YYYYMMDD")}${randomInteger(100, 999)}`;
-  let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
-  let orderId = `OD${moment().format("YYYYMMDDHHmmss")}`;
-
-  let requestBody = {
-    RequestId: requestId,
-    RequestTime: requestTime,
-    PartnerCode: PARTNERCODE,
-    Operation: OPERATION_CREATE,
-    CreateType: CREATETYPE,
-    AccName: accountName,
-    CollectAmountMin: amountMin,
-    CollectAmountMax: amountMax,
-    OrderId: orderId,
-  };
-  if (expireDate) requestBody.ExpireDate = expireDate;
-  //
-  let rawData = JSON.stringify(requestBody);
-  console.log(rawData);
-  let sign = util.createRSASignature(rawData, privateKey);
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    OPERATION_CREATE,
+    {
+      accName,
+      amountMin,
+      amountMax,
+      expireDate,
+    },
+  );
+  let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+  let res = await axios.post(COLLECT_URL, requestInfo, {
     headers,
   });
-  console.log("headers: ", headers);
-  console.log("body: ", requestBody);
-  console.log(res.data);
-  if (res.data) {
-    let account = new VirtualAccount({
-      requestId: requestId,
-      requestTime: requestTime,
-      orderId: res.data.OrderId,
-      amountMin: res.data.CollectAmountMin,
-      amountMax: res.data.CollectAmountMax,
-      expireDate: res.data.ExpireDate,
-      accountInfo: res.data.AccountInfo,
-    });
-    mongoose.connect(MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    let newAccount = await account.save();
-    mongoose.disconnect();
-    return newAccount;
-  }
-  return null;
+  return res;
 };
-var registerVirtualAccount = async (requestInfo) => {
+//TODO: Need replace - Test
+var registerVirtualAccount = async function (requestInfo) {
   let requestBody = {
     RequestId: requestInfo.requestId,
     RequestTime: requestInfo.requestTime,
@@ -107,72 +69,64 @@ var registerVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  console.log(process.env.NODE_ENV);
-  console.log("VA URL", config.baokim.virtualaccount.url);
-  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+  let res = await axios.post(COLLECT_URL, requestBody, {
     headers,
   });
   return res;
 };
-var updateVirtualAccount = async (requestInfo) => {
-  let requestBody = {
-    RequestId: requestInfo.requestId,
-    RequestTime: requestInfo.requestTime,
-    PartnerCode: PARTNERCODE,
-    Operation: OPERATION_UPDATE,
-    CreateType: CREATETYPE,
-    AccName: requestInfo.accountName,
-    OrderId: requestInfo.orderId,
-    AccNo: requestInfo.accountNo,
-  };
-  if (requestInfo.expireDate) requestBody.ExpireDate = requestInfo.expireDate;
-  if (requestInfo.amountMin)
-    requestBody.CollectAmountMin = requestInfo.amountMin;
-  if (requestInfo.amountMax)
-    requestBody.CollectAmountMax = requestInfo.amountMax;
-  if (requestInfo.accountName) requestBody.AccName = requestInfo.accountName;
-  //
-  let sign = util.createRSASignature(JSON.stringify(requestBody), privateKey);
+var updateVirtualAccount = async function (
+  accNo,
+  accName,
+  amountMin,
+  amountMax,
+  expireDate,
+) {
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    OPERATION_UPDATE,
+    { accNo, accName, amountMin, amountMax, expireDate },
+  );
+  //Send to baokim
+  let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+  let res = await axios.post(COLLECT_URL, requestInfo, {
     headers,
   });
   return res;
 };
-var getVirtualAccount = async (accountNo) => {
-  let requestId = `BK${moment()
-    .tz(TIMEZONE_VN)
-    .format("YYYYMMDD")}${randomInteger(100, 999)}`;
-  let requestTime = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
-  let requestInfo = {
-    requestId: requestId,
-    requestTime: requestTime,
-    accountNo: accountNo,
-  };
-  let response = await retriveVirtualAccount(requestInfo);
-  if (response.data || response.data.ResponseCode == 200) {
-    console.log(response.data);
-    return response.data;
-  }
-  return null;
-};
-var retriveVirtualAccount = async (requestInfo) => {
-  let requestBody = {
-    RequestId: requestInfo.requestId,
-    RequestTime: requestInfo.requestTime,
-    PartnerCode: PARTNERCODE,
-    Operation: OPERATION_SEARCH,
-    AccNo: requestInfo.accountNo,
-  };
-  let sign = util.createRSASignature(JSON.stringify(requestBody), privateKey);
+//TODO: FIX SAME
+var getVirtualAccount = async function (accNo) {
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    OPERATION_SEARCH,
+    { accNo },
+  );
+  let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
   let headers = {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
+  let res = await axios.post(COLLECT_URL, requestInfo, {
+    headers,
+  });
+  return res;
+};
+//TODO: FIX SAME
+var retriveVirtualAccount = async function (accNo) {
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    OPERATION_SEARCH,
+    { accNo },
+  );
+  let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
+  let headers = {
+    "Content-Type": "application/json",
+    Signature: `${sign}`,
+  };
+  let res = await axios.post(COLLECT_URL, requestInfo, {
     headers,
   });
   return res;

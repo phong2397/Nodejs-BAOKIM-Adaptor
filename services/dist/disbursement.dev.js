@@ -1,112 +1,116 @@
 "use strict";
 
-var request = require("request");
-
-var date = require("date-and-time");
-
-var crypto = require("crypto");
-
-var fs = require("fs");
-
 var appRootPath = require("app-root-path");
 
-var _require = require("".concat(appRootPath, "/config/config")),
-    config = _require.config;
+var axios = require("axios");
 
-var PARTNERCODE = config.baokim.disbursement.partnercode;
-var data = JSON.parse(fs.readFileSync(config.baokim.disbursement.data));
-var privateKey = fs.readFileSync(config.baokim.disbursement.privatekey);
-var publicKey = fs.readFileSync(config.baokim.disbursement.publickey);
+var _require = require("../utils/baokim/baokim-utils"),
+    requestFactory = _require.requestFactory;
 
-function createSignature(requestText, privateKey) {
-  var sign = crypto.createSign("RSA-SHA1");
-  sign.update(requestText);
-  sign.end();
-  var signature = sign.sign(privateKey, "base64");
-  return signature;
-}
+var _require2 = require("".concat(appRootPath, "/config/config")),
+    config = _require2.config;
 
-function verifySignature(responseText, signature, publicKey) {
-  var verify = crypto.createVerify("RSA-SHA1");
-  verify.update(responseText);
-  verify.end();
-  return verify.verify(publicKey, Buffer.from(signature, "base64"));
-}
+var TRANSFERMONEY = {
+  VERIFYCUSTOMER: config.baokim.disbursement.operation.verifyCustomer,
+  TRANSFER: config.baokim.disbursement.operation.transferMoney,
+  CHECKTRANSACTION: config.baokim.disbursement.operation.checkTransaction,
+  ACCTYPE: 0
+};
+var TRANSFERMONEY_URL = config.baokim.transferMoneyUrl;
 
-function sendToPaymentgateway(url, reqData) {
-  console.log("Request: ", url);
-  console.log("Request Data: ", reqData);
-  return new Promise(function (resolve, reject) {
-    request({
-      url: url,
-      method: "POST",
-      json: reqData
-    }, function (error, response, responseData) {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(responseData);
+var validateCustomer = function validateCustomer(accNo, bankNo) {
+  var requestInfo, headers, res;
+  return regeneratorRuntime.async(function validateCustomer$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          requestInfo = new requestFactory().createRequestInfo("transfermoney", TRANSFERMONEY.VERIFYCUSTOMER, {
+            accNo: accNo,
+            bankNo: bankNo
+          });
+          headers = {
+            "Content-Type": "application/json"
+          };
+          _context.next = 4;
+          return regeneratorRuntime.awrap(axios.post(TRANSFERMONEY_URL, requestInfo, {
+            headers: headers
+          }));
+
+        case 4:
+          res = _context.sent;
+          return _context.abrupt("return", res);
+
+        case 6:
+        case "end":
+          return _context.stop();
       }
-    });
+    }
   });
-}
+};
 
-function setCheckUserInfoData(requestData) {
-  var now = new Date();
-  var timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  var id = "BK" + date.format(now, "YYYYMMDDHHmmss") + Math.floor(Math.random() * Math.floor(9));
-  var bankno = requestData.BankNo;
-  var accno = requestData.AccNo;
-  var dataSign = "".concat(id, "|").concat(timeRequest, "|").concat(data.CheckUserInfomation.PartnerCode, "|").concat(data.CheckUserInfomation.Operation, "|").concat(bankno, "|").concat(accno, "|").concat(data.CheckUserInfomation.AccType);
-  data.CheckUserInfomation.RequestId = id;
-  data.CheckUserInfomation.RequestTime = timeRequest;
-  data.CheckUserInfomation.PartnerCode = PARTNERCODE;
-  data.CheckUserInfomation.BankNo = bankno;
-  data.CheckUserInfomation.AccNo = accno;
-  console.log("rawData: ", dataSign);
-  data.CheckUserInfomation.Signature = createSignature(dataSign, privateKey);
-  return data.CheckUserInfomation;
-}
+var transferMoney = function transferMoney(accNo, bankNo, requestAmount, memo) {
+  var requestInfo, headers, res;
+  return regeneratorRuntime.async(function transferMoney$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          requestInfo = new requestFactory().createRequestInfo("transfermoney", TRANSFERMONEY.TRANSFER, {
+            accNo: accNo,
+            bankNo: bankNo,
+            requestAmount: requestAmount,
+            memo: memo
+          });
+          headers = {
+            "Content-Type": "application/json"
+          };
+          _context2.next = 4;
+          return regeneratorRuntime.awrap(axios.post(TRANSFERMONEY_URL, requestInfo, {
+            headers: headers
+          }));
 
-function setTransfer(requestData) {
-  var now = new Date();
-  var timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  var id = "BK" + date.format(now, "YYYYMMDDHHmmss") + Math.floor(Math.random() * Math.floor(9));
-  var referenceId = id + Math.floor(Math.random() * Math.floor(99));
-  var bankno = requestData.BankNo;
-  var accno = requestData.AccNo;
-  var requestamount = requestData.RequestAmount;
-  var memo = requestData.Memo;
-  var dataSign = "".concat(id, "|").concat(timeRequest, "|").concat(data.MoneyTransfer.PartnerCode, "|").concat(data.MoneyTransfer.Operation, "|").concat(referenceId, "|").concat(bankno, "|").concat(accno, "|").concat(data.MoneyTransfer.AccType, "|").concat(requestamount, "|").concat(memo);
-  data.MoneyTransfer.RequestId = id;
-  data.MoneyTransfer.RequestTime = timeRequest;
-  data.MoneyTransfer.ReferenceId = referenceId;
-  data.MoneyTransfer.PartnerCode = PARTNERCODE;
-  data.MoneyTransfer.BankNo = bankno;
-  data.MoneyTransfer.AccNo = accno;
-  data.MoneyTransfer.RequestAmount = requestamount;
-  data.MoneyTransfer.Memo = memo;
-  data.MoneyTransfer.Signature = createSignature(dataSign, privateKey);
-  return data.MoneyTransfer;
-}
+        case 4:
+          res = _context2.sent;
+          return _context2.abrupt("return", res);
 
-function setCheckTransStatus(requestData) {
-  var now = new Date();
-  var timeRequest = date.format(now, "YYYY-MM-DD HH:mm:ss");
-  var id = "BK" + date.format(now, "YYYYMMDDHHmmss") + Math.floor(Math.random() * Math.floor(9));
-  var refid = requestData.ReferenceId;
-  var dataSign = "".concat(id, "|").concat(timeRequest, "|").concat(data.CheckTransactionStatus.PartnerCode, "|").concat(data.CheckTransactionStatus.Operation, "|").concat(refid);
-  data.CheckTransactionStatus.RequestId = id;
-  data.CheckTransactionStatus.RequestTime = timeRequest;
-  data.CheckTransactionStatus.PartnerCode = PARTNERCODE;
-  data.CheckTransactionStatus.ReferenceId = refid;
-  data.CheckTransactionStatus.Signature = createSignature(dataSign, privateKey);
-  return data.CheckTransactionStatus;
-}
+        case 6:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
+};
+
+var checkTransaction = function checkTransaction(referenceId) {
+  var requestInfo, headers, res;
+  return regeneratorRuntime.async(function checkTransaction$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          requestInfo = new requestFactory().createRequestInfo("transfermoney", TRANSFERMONEY.CHECKTRANSACTION, {
+            referenceId: referenceId
+          });
+          headers = {
+            "Content-Type": "application/json"
+          };
+          _context3.next = 4;
+          return regeneratorRuntime.awrap(axios.post(TRANSFERMONEY_URL, requestInfo, {
+            headers: headers
+          }));
+
+        case 4:
+          res = _context3.sent;
+          return _context3.abrupt("return", res);
+
+        case 6:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
 
 module.exports = {
-  sendToPaymentgateway: sendToPaymentgateway,
-  setCheckUserInfoData: setCheckUserInfoData,
-  setTransfer: setTransfer,
-  setCheckTransStatus: setCheckTransStatus
+  validateCustomer: validateCustomer,
+  transferMoney: transferMoney,
+  checkTransaction: checkTransaction
 };
