@@ -7,10 +7,8 @@ var fs = require("fs");
 var baokim = require("../services/virtual-account");
 var appRootPath = require("app-root-path");
 const { config } = require(`${appRootPath}/config/config`);
-const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
-var baoKimPublicKey = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim,
-);
+const privateKey = fs.readFileSync(config.baokim.privatekey);
+var baoKimPublicKey = fs.readFileSync(config.baokim.publickeyBaokim);
 const MESSAGE = {
   ACCOUNT_INVALID: {
     ResponseCode: 111,

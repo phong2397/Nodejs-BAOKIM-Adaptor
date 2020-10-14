@@ -9,7 +9,7 @@ const logger = require("../winston/winston");
 
 const { config } = require(`${appRootPath}/config/config`);
 const privatekey = fs.readFileSync(config.baokim.privatekey);
-const PARTNERCODE = config.baokim.virtualaccount.partnercode;
+const PARTNERCODE = config.baokim.partnercode;
 const TIME_FORMAT_CLOCKTIME = "YYYY-MM-DD HH:mm:ss";
 const TIME_FORMAT_CLOCKTIME_FLAT = "YYYYMMDDHHmmss";
 const TIME_FORMAT_FLAT = "YYYYMMDD";
@@ -29,8 +29,14 @@ const VIRTUALACCOUNT = {
   TRANSACTION_SEARCH: config.baokim.virtualaccount.operation.transaction, // TRANSACTION SEARCH VA
   CREATETYPE: config.baokim.virtualaccount.settings.createtype, // BAOKIM AUTO GENERTATE ACCOUNT NO
 };
-
-var postToServer = async (url, data, headers) => {};
+//TODO: Catch request and process
+var postToServer = async (url, data, headers) => {
+  logger.loggerConsole("SEND").info(url);
+  let res = await axios.post(url, data, {
+    headers,
+  });
+  return res;
+};
 //
 class RequestInfo {
   constructor() {
@@ -97,7 +103,7 @@ class VerifyCustomer extends RequestInfo {
 class TransferMoney extends RequestInfo {
   constructor({ accNo, bankNo, requestAmount, memo }) {
     super();
-    this.Operation = TRANSFERMONEY.VERIFYCUSTOMER;
+    this.Operation = TRANSFERMONEY.TRANSFER;
     this.ReferenceId =
       this.RequestId + randomInteger(MIN_RANDOM_NUMBER, MAX_RANDOM_NUMBER);
     this.BankNo = bankNo;
@@ -116,7 +122,7 @@ class TransferMoney extends RequestInfo {
 class CheckTransaction extends RequestInfo {
   constructor({ referenceId }) {
     super();
-    this.Operation = TRANSFERMONEY.VERIFYCUSTOMER;
+    this.Operation = TRANSFERMONEY.CHECKTRANSACTION;
     this.ReferenceId = referenceId;
     this.Signature = util.createRSASignature(
       `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}`,
@@ -147,7 +153,7 @@ class requestFactory {
           //data = { bankNo, accNo }
           requestInfo = new VerifyCustomer(data);
         }
-        if (operation === TRANSFERMONEY.TRANSFERMONEY) {
+        if (operation === TRANSFERMONEY.TRANSFER) {
           //data = { accNo, bankNo, requestAmount, memo }
           requestInfo = new TransferMoney(data);
         }

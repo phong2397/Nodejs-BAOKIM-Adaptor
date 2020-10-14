@@ -3,12 +3,12 @@ key: "wUhLDGWwKTvEiOSU"
 mongo:
   url: "mongodb://pdladmin:sgftpdl66PDC.2020%24%24@150.95.115.104:27017/sgfpdldb"
 baokim:
-  transferMoneyUrl: "http://210.245.83.82:9095/Golive/FirmBanking"
-  collectionUrl: "http://210.245.80.27:9092/Golive/Collection/V2"
-  partnercode: "SGFT3"
-  privatekey: "key/production/sgf/private.pem"
-  publickey: "key/production/sgf/public.pem"
-  publickeyBaokim: "key/production/baokim/public.pem"
+  transferMoneyUrl: "http://210.245.80.186:9095/Sandbox/FirmBanking"
+  collectionUrl: "http://210.245.80.186:8085/Sandbox/Collection/V2"
+  partnercode: "VAYSV"
+  privatekey: "key/test/private.pem"
+  publickey: "key/test/public.pem"
+  publickeyBaokim: "key/test/baokim/public.pem"
   accType:
     account: 1
     card: 0
@@ -16,21 +16,11 @@ baokim:
     transferMoney: 9002
     checkTransaction: 9003
   disbursement:
-    url: "http://210.245.83.82:9095/Golive/FirmBanking"
-    data: "config/disbursement-data-production.json"
-    privatekey: "key/production/sgf/private.pem"
-    publickey: "key/production/sgf/public.pem"
     operation:
       verifyCustomer: 9001
       transferMoney: 9002
       checkTransaction: 9003
   virtualaccount:
-    url: "http://210.245.80.27:9092/Golive/Collection/V2"
-    privatekey: "key/production/sgf/private.pem"
-    publickey:
-      sgf: "key/production/sgf/public.pem"
-      baokim: "key/production/baokim/public.pem"
-    partnercode: "SGFT3"
     operation:
       create: 9001
       update: 9002

@@ -9,12 +9,6 @@ let should = chai.should();
 let assert = require("chai").assert;
 let fs = require("fs");
 let yaml = require("js-yaml");
-
-var disbursementData = yaml.safeLoad(
-  fs.readFileSync("./test/data/disbursement-sample.yaml", "utf8"),
-);
-var refId = "";
-
 chai.use(chaiHttp);
 describe("BAOKIM Disbursement", () => {
   beforeEach(done => {
@@ -24,9 +18,9 @@ describe("BAOKIM Disbursement", () => {
     it("it should return user info success", done => {
       chai
         .request(server)
-        .post("/disbursement/checkuserinfo")
+        .post("/disbursement/validatecustomer")
         .set("Content-Type", "application/json")
-        .send(disbursementData.checkUserInfo)
+        .send({ bankNo: "970457", accNo: "100100132448" })
         .end((err, res) => {
           res.should.have.status(200);
           assert.equal(
@@ -42,9 +36,14 @@ describe("BAOKIM Disbursement", () => {
     it("it should transfer success", done => {
       chai
         .request(server)
-        .post("/disbursement/transfer")
+        .post("/disbursement/transfermoney")
         .set("Content-Type", "application/json")
-        .send(disbursementData.transfer)
+        .send({
+          accNo: "100100132448",
+          bankNo: "970457",
+          requestAmount: "50000",
+          memo: "Test chuyen tien",
+        })
         .end((err, res) => {
           res.should.have.status(200);
           assert.equal(
@@ -59,12 +58,16 @@ describe("BAOKIM Disbursement", () => {
   });
   context("Check transaction status", () => {
     it("it should return transaction info success", done => {
-      disbursementData.checkTransStatus.ReferenceId = refId;
       chai
         .request(server)
-        .post("/disbursement/checktransactionstatus")
+        .post("/disbursement/transfermoney")
         .set("Content-Type", "application/json")
-        .send(disbursementData.checkTransStatus)
+        .send({
+          accNo: "100100132448",
+          bankNo: "970457",
+          requestAmount: "50000",
+          memo: "Test chuyen tien",
+        })
         .end((err, res) => {
           res.should.have.status(200);
           assert.equal(
@@ -72,7 +75,21 @@ describe("BAOKIM Disbursement", () => {
             200,
             "ResponseCode success must is 200",
           );
-          done();
+          let refId = res.body.ReferenceId;
+          chai
+            .request(server)
+            .post("/disbursement/transaction")
+            .set("Content-Type", "application/json")
+            .send({ referenceId: refId })
+            .end((err, res) => {
+              res.should.have.status(200);
+              assert.equal(
+                res.body.ResponseCode,
+                200,
+                "ResponseCode success must is 200",
+              );
+              done();
+            });
         });
     });
   });
