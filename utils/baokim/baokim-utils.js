@@ -4,12 +4,16 @@ const fs = require("fs");
 const util = require("../util");
 const appRootPath = require("app-root-path");
 const moment = require("moment-timezone");
+const axios = require("axios");
 const logger = require("../winston/winston");
+
 const { config } = require(`${appRootPath}/config/config`);
 const privatekey = fs.readFileSync(config.baokim.privatekey);
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
 const TIME_FORMAT_CLOCKTIME = "YYYY-MM-DD HH:mm:ss";
+const TIME_FORMAT_CLOCKTIME_FLAT = "YYYYMMDDHHmmss";
 const TIME_FORMAT_FLAT = "YYYYMMDD";
+const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 const MIN_RANDOM_NUMBER = 100;
 const MAX_RANDOM_NUMBER = 999;
 const TRANSFERMONEY = {
@@ -25,8 +29,8 @@ const VIRTUALACCOUNT = {
   TRANSACTION_SEARCH: config.baokim.virtualaccount.operation.transaction, // TRANSACTION SEARCH VA
   CREATETYPE: config.baokim.virtualaccount.settings.createtype, // BAOKIM AUTO GENERTATE ACCOUNT NO
 };
-const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
-var postToServer = async function (url, data, headers) {};
+
+var postToServer = async (url, data, headers) => {};
 //
 class RequestInfo {
   constructor() {
@@ -52,7 +56,7 @@ class RegisterVirtualAccount extends RequestInfo {
     this.CollectAmountMin = amountMin;
     this.CollectAmountMax = amountMax;
     this.AccNo = "NULL";
-    this.OrderId = `ODVA${moment().format("YYYYMMDDHHmmss")}`;
+    this.OrderId = `ODVA${moment().format(TIME_FORMAT_CLOCKTIME_FLAT)}`;
     this.ExpireDate = expireDate;
   }
 }
@@ -64,7 +68,7 @@ class UpdateVirtualAccount extends RequestInfo {
     this.AccName = accName;
     this.CollectAmountMin = amountMin;
     this.CollectAmountMax = amountMax;
-    this.OrderId = `ODVA${moment().format("YYYYMMDDHHmmss")}`;
+    this.OrderId = `ODVA${moment().format(TIME_FORMAT_CLOCKTIME_FLAT)}`;
     this.ExpireDate = expireDate;
   }
 }

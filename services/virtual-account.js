@@ -23,6 +23,7 @@ const COLLECTION_NAME = "virtualaccount";
 const virtualAccountSchema = require("virtual-account");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
+
 var randomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
