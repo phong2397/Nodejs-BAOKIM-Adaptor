@@ -4,8 +4,6 @@ const util = require("../utils/util");
 const { requestFactory } = require("../utils/baokim/baokim-utils");
 const appRootPath = require("app-root-path");
 const axios = require("axios");
-const moment = require("moment-timezone");
-const mongoose = require("mongoose");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.privatekey);
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
@@ -14,12 +12,8 @@ const OPERATION_UPDATE = config.baokim.virtualaccount.operation.update; // UPDAT
 const OPERATION_SEARCH = config.baokim.virtualaccount.operation.search; // SEARCH VA
 const OPERATION_TRANSACTION_SEARCH =
   config.baokim.virtualaccount.operation.transaction; // TRANSACTION SEARCH VA
-const MONGO_URL = config.mongo.url;
 const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
 const COLLECT_URL = config.baokim.collectionUrl;
-var randomInteger = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
 
 var createVirtualAccount = async function (
   accName,
@@ -97,7 +91,7 @@ var updateVirtualAccount = async function (
   });
   return res;
 };
-//TODO: FIX SAME
+//TODO: FIX SAME v
 var getVirtualAccount = async function (accNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
@@ -114,7 +108,7 @@ var getVirtualAccount = async function (accNo) {
   });
   return res;
 };
-//TODO: FIX SAME
+//TODO: FIX SAME ^
 var retriveVirtualAccount = async function (accNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",

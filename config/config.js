@@ -5,8 +5,7 @@ const appRootPath = require("app-root-path");
 
 var loadConfig = () => {
   var env = process.env.NODE_ENV;
-  var env = "production";
-  console.log(env);
+  console.log("Enviroment: " + env);
   var path = "";
   switch (env) {
     case "production":

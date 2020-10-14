@@ -2,9 +2,21 @@
 version: "2"
 services:
   app:
-    container_name: baokim-adaptor
+    container_name: baokim-adaptor-production
     build: .
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
     volumes:
       - "./logs:/app/logs"
+  
+  app-test:
+    container_name: baokim-adaptor-test
+    build: .
+    ports:
+      - "6000:3000"
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - "./logs-test:/app/logs"
