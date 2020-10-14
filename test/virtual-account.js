@@ -7,7 +7,7 @@ let { v4: uuidv4 } = require("uuid");
 let fs = require("fs");
 let { config } = require("../config/config");
 let publicKeyBK = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim
+  config.baokim.virtualaccount.publickey.baokim,
 );
 let publickey = fs.readFileSync(config.baokim.disbursement.publickey);
 let privatekey = fs.readFileSync(config.baokim.disbursement.privatekey);
@@ -16,7 +16,7 @@ const util = require("../utils/util");
 let expect = chai.expect;
 
 describe("Baokim", () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     done();
   });
   describe("Product Test Script", () => {
@@ -42,7 +42,7 @@ describe("Baokim", () => {
         accountNo: accNo,
       };
       let respSearch = await virtualAccount.retriveVirtualAccount(
-        requestSearch
+        requestSearch,
       );
       expect(respSearch.status).to.equal(200);
       expect(respSearch.data).to.not.equal(undefined);
@@ -89,7 +89,7 @@ describe("Baokim", () => {
         accountNo: accNo,
       };
       let respSearch = await virtualAccount.retriveVirtualAccount(
-        requestSearch
+        requestSearch,
       );
       expect(respSearch.status).to.equal(200);
       expect(respSearch.data).to.not.equal(undefined);
@@ -117,7 +117,7 @@ describe("Baokim", () => {
         orderId: requestInfo.orderId,
       };
       let respUpdate = await virtualAccount.updateVirtualAccount(
-        requestInfoUpdate
+        requestInfoUpdate,
       );
       expect(respUpdate.status).to.equal(200);
       expect(respUpdate.data).to.not.equal(undefined);
@@ -153,7 +153,7 @@ describe("Baokim", () => {
       let check = util.baokimVerifySignature(
         rawText,
         data.Signature,
-        publicKeyBK
+        publicKeyBK,
       );
       expect(check).to.equal(true);
     });

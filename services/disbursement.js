@@ -44,7 +44,7 @@ function sendToPaymentgateway(url, reqData) {
         } else {
           resolve(responseData);
         }
-      }
+      },
     );
   });
 }
@@ -54,7 +54,7 @@ function setCheckUserInfoData(requestData) {
   let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
     100,
-    999
+    999,
   )}`;
   let bankno = requestData.BankNo;
   let accno = requestData.AccNo;
@@ -75,7 +75,7 @@ function setTransfer(requestData) {
   let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
     100,
-    999
+    999,
   )}`;
   Math.floor(Math.random() * Math.floor(9));
   let referenceId = id + Math.floor(Math.random() * Math.floor(99));
@@ -104,7 +104,7 @@ function setCheckTransStatus(requestData) {
   let timeRequest = moment().tz(TIMEZONE_VN).format("YYYY-MM-DD HH:mm:ss");
   let id = `BK${moment().tz(TIMEZONE_VN).format("YYYYMMDD")}${randomInteger(
     100,
-    999
+    999,
   )}`;
   var refid = requestData.ReferenceId;
 

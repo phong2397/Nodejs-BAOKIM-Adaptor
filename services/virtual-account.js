@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
 const publickey = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim
+  config.baokim.virtualaccount.publickey.baokim,
 );
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
 const OPERATION_CREATE = config.baokim.virtualaccount.operation.create; // CREATE VA
@@ -23,7 +23,6 @@ const COLLECTION_NAME = "virtualaccount";
 const virtualAccountSchema = require("virtual-account");
 const VirtualAccount = mongoose.model(COLLECTION_NAME, virtualAccountSchema);
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
-
 var randomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -32,7 +31,7 @@ var createVirtualAccount = async function (
   accName,
   amountMin,
   amountMax,
-  expireDate
+  expireDate,
 ) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
@@ -42,7 +41,7 @@ var createVirtualAccount = async function (
       amountMin,
       amountMax,
       expireDate,
-    }
+    },
   );
   let sign = util.createRSASignature(rawData, privateKey);
   let headers = {
@@ -73,7 +72,7 @@ var createVirtualAccount = async function (
   }
   return null;
 };
-var registerVirtualAccount = async (requestInfo) => {
+var registerVirtualAccount = async requestInfo => {
   let requestBody = {
     RequestId: requestInfo.requestId,
     RequestTime: requestInfo.requestTime,
@@ -94,14 +93,12 @@ var registerVirtualAccount = async (requestInfo) => {
     "Content-Type": "application/json",
     Signature: `${sign}`,
   };
-  console.log(process.env.NODE_ENV);
-  console.log("VA URL", config.baokim.virtualaccount.url);
   let res = await axios.post(config.baokim.virtualaccount.url, requestBody, {
     headers,
   });
   return res;
 };
-var updateVirtualAccount = async (requestInfo) => {
+var updateVirtualAccount = async requestInfo => {
   let requestBody = {
     RequestId: requestInfo.requestId,
     RequestTime: requestInfo.requestTime,
@@ -129,7 +126,7 @@ var updateVirtualAccount = async (requestInfo) => {
   });
   return res;
 };
-var getVirtualAccount = async (accountNo) => {
+var getVirtualAccount = async accountNo => {
   let requestId = `BK${moment()
     .tz(TIMEZONE_VN)
     .format("YYYYMMDD")}${randomInteger(100, 999)}`;
@@ -146,7 +143,7 @@ var getVirtualAccount = async (accountNo) => {
   }
   return null;
 };
-var retriveVirtualAccount = async (requestInfo) => {
+var retriveVirtualAccount = async requestInfo => {
   let requestBody = {
     RequestId: requestInfo.requestId,
     RequestTime: requestInfo.requestTime,

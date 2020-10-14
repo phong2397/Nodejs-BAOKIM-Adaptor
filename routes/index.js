@@ -9,7 +9,7 @@ var appRootPath = require("app-root-path");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.virtualaccount.privatekey);
 var baoKimPublicKey = fs.readFileSync(
-  config.baokim.virtualaccount.publickey.baokim
+  config.baokim.virtualaccount.publickey.baokim,
 );
 const MESSAGE = {
   ACCOUNT_INVALID: {
@@ -42,12 +42,12 @@ router.post("/collectatpoint", async function (req, res, next) {
   let checkSignature = util.baokimVerifySignature(
     rawRequestInfo,
     requestInfo.Signature,
-    baoKimPublicKey
+    baoKimPublicKey,
   );
   let accountNo = requestInfo.AccNo;
   let requestSearch = {
     requestId: `BK${moment().tz("Asia/Ho_Chi_Minh").format("x")}${Math.random(
-      100
+      100,
     )}`,
     requestTime: moment().tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD HH:mm:ss"),
     accountNo: accountNo,
@@ -109,7 +109,7 @@ router.post("/transaction", function (req, res, next) {
   let checkSignature = util.baokimVerifySignature(
     dataFromRequest,
     requestInfo.Signature,
-    baoKimPublicKey
+    baoKimPublicKey,
   );
   if (!requestInfo.Signature || !checkSignature) {
     return res.status(200).json(MESSAGE.SIGNATURE_INVALID);
@@ -147,7 +147,7 @@ router.post("/bankswitch", function (req, res, next) {
   let checkSignature = util.baokimVerifySignature(
     JSON.stringify(requestInfo),
     Signature,
-    baoKimPublicKey
+    baoKimPublicKey,
   );
   //Check Signature
   if (!Signature || !checkSignature) {
@@ -160,7 +160,7 @@ router.post("/bankswitch", function (req, res, next) {
   };
   let signatureRes = util.createRSASignature(
     JSON.stringify(responseInfo),
-    privateKey
+    privateKey,
   );
   responseInfo.Signature = signatureRes;
   return res.status(200).json(responseInfo);

@@ -38,7 +38,7 @@ class RequestInfo {
       .tz(TIMEZONE_VN)
       .format(TIME_FORMAT_FLAT)}${randomInteger(
       MIN_RANDOM_NUMBER,
-      MAX_RANDOM_NUMBER
+      MAX_RANDOM_NUMBER,
     )}`;
     this.RequestTime = moment().tz(TIMEZONE_VN).format(TIME_FORMAT_CLOCKTIME);
     this.PartnerCode = PARTNERCODE;
@@ -90,7 +90,7 @@ class VerifyCustomer extends RequestInfo {
       `${this.getRawDataFormatted()}|${this.Operation}|${this.BankNo}|${
         this.AccNo
       }|${this.AccType}`,
-      privatekey
+      privatekey,
     );
   }
 }
@@ -109,7 +109,7 @@ class TransferMoney extends RequestInfo {
       `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}|${
         this.BankNo
       }|${this.AccNo}|${this.AccType}|${this.RequestAmount}|${this.Memo}`,
-      privatekey
+      privatekey,
     );
   }
 }
@@ -120,7 +120,7 @@ class CheckTransaction extends RequestInfo {
     this.ReferenceId = referenceId;
     this.Signature = util.createRSASignature(
       `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}`,
-      privatekey
+      privatekey,
     );
   }
 }

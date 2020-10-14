@@ -10,12 +10,12 @@ let expect = chai.expect;
 chai.use(chaiHttp);
 //Our parent block
 describe("BAOKIM", () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     //Before each test we empty the database in your case
     done();
   });
   context("POST /collectionatpoint  ", () => {
-    it("Must be success", (done) => {
+    it("Must be success", done => {
       let data = {
         RequestId: "BK5F7AEC006D41F191L9",
         RequestTime: "2020-10-05 16:48:48",
@@ -41,12 +41,12 @@ describe("BAOKIM", () => {
           expect(res.body.CollectAmountMax).to.equal(9500000);
           expect(JSON.stringify(res.body.Info)).to.equal(JSON.stringify({}));
           expect(res.body.Signature).to.equal(
-            "iPJ5adhNViiGuWHifaDiWh925alqkzJrg8IGu/Ikya4v2hiwANa4M70jo36EETQlVW81eSGxszAl29/k3aTTLpDBI11jhr4IOYqCWSxljxGS+Cp0Bk2HmJV2H13fRHYWxyPX6xFoP2HKyGHiWnzN1zIgHa3t8dVL0EoCc3c+Ack="
+            "iPJ5adhNViiGuWHifaDiWh925alqkzJrg8IGu/Ikya4v2hiwANa4M70jo36EETQlVW81eSGxszAl29/k3aTTLpDBI11jhr4IOYqCWSxljxGS+Cp0Bk2HmJV2H13fRHYWxyPX6xFoP2HKyGHiWnzN1zIgHa3t8dVL0EoCc3c+Ack=",
           );
           done();
         });
     });
-    it("Must be fail - Signature is incorrect", (done) => {
+    it("Must be fail - Signature is incorrect", done => {
       let data = {
         RequestId: "BK5F7AEC006D41F191L9",
         RequestTime: "2020-10-05 16:48:48",
@@ -68,7 +68,7 @@ describe("BAOKIM", () => {
     });
   });
   context("POST /transaction", () => {
-    it("Must be success", (done) => {
+    it("Must be success", done => {
       let data = {
         RequestId: "BK4c3fe101e2742fa",
         RequestTime: "2020-10-05 16:56:14",
@@ -96,7 +96,7 @@ describe("BAOKIM", () => {
           done();
         });
     });
-    it("Must be fail - Signature is incorrect", (done) => {
+    it("Must be fail - Signature is incorrect", done => {
       let data = {
         RequestId: "BK4c3fe101e2742fa",
         RequestTime: "2020-10-05 16:56:14",
@@ -126,7 +126,7 @@ describe("BAOKIM", () => {
     });
   });
   context("POST /bankswitch ", () => {
-    it("Must be success", (done) => {
+    it("Must be success", done => {
       let data = {
         RequestId: "BKf7690e177a641f1",
         RequestTime: "2020-10-06 10:47:22",
@@ -152,12 +152,12 @@ describe("BAOKIM", () => {
           expect(res.body.ResponseMessage).to.equal("Success");
           expect(res.body.AccNo).to.equal("00837997608");
           expect(res.body.Signature).to.equal(
-            "af70deZff3hVlg+HUEp9cVcYdz2g9mzseVTbBEsVbfWWadNh/IY67tzPRbAxNqhfOtzilnSeD9slKu19e2pJNK5I0qEZKtQ7IR8HQ/WD/nVYxGEPlVFhk+9XNgsyPWanRE6BBNQ+1TlhYCx9dWDbUR3DzDNBKB5FRU3+cuBoN3w="
+            "af70deZff3hVlg+HUEp9cVcYdz2g9mzseVTbBEsVbfWWadNh/IY67tzPRbAxNqhfOtzilnSeD9slKu19e2pJNK5I0qEZKtQ7IR8HQ/WD/nVYxGEPlVFhk+9XNgsyPWanRE6BBNQ+1TlhYCx9dWDbUR3DzDNBKB5FRU3+cuBoN3w=",
           );
           done();
         });
     });
-    it("Must be fail - Signature Incorrect", (done) => {
+    it("Must be fail - Signature Incorrect", done => {
       let data = {
         RequestId: "BKf7690e177a641f1",
         RequestTime: "2020-10-06 10:47:22",

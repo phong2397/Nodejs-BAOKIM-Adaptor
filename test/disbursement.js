@@ -11,17 +11,17 @@ let fs = require("fs");
 let yaml = require("js-yaml");
 
 var disbursementData = yaml.safeLoad(
-  fs.readFileSync("./test/data/disbursement-sample.yaml", "utf8")
+  fs.readFileSync("./test/data/disbursement-sample.yaml", "utf8"),
 );
 var refId = "";
 
 chai.use(chaiHttp);
 describe("BAOKIM Disbursement", () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     done();
   });
   context("Check User Infomation", () => {
-    it("it should return user info success", (done) => {
+    it("it should return user info success", done => {
       chai
         .request(server)
         .post("/disbursement/checkuserinfo")
@@ -32,14 +32,14 @@ describe("BAOKIM Disbursement", () => {
           assert.equal(
             res.body.ResponseCode,
             200,
-            "ResponseCode success must is 200"
+            "ResponseCode success must is 200",
           );
           done();
         });
     });
   });
   context("Transfer money", () => {
-    it("it should transfer success", (done) => {
+    it("it should transfer success", done => {
       chai
         .request(server)
         .post("/disbursement/transfer")
@@ -50,7 +50,7 @@ describe("BAOKIM Disbursement", () => {
           assert.equal(
             res.body.ResponseCode,
             200,
-            "ResponseCode success must is 200"
+            "ResponseCode success must is 200",
           );
           refId = res.body.ReferenceId;
           done();
@@ -58,7 +58,7 @@ describe("BAOKIM Disbursement", () => {
     });
   });
   context("Check transaction status", () => {
-    it("it should return transaction info success", (done) => {
+    it("it should return transaction info success", done => {
       disbursementData.checkTransStatus.ReferenceId = refId;
       chai
         .request(server)
@@ -70,7 +70,7 @@ describe("BAOKIM Disbursement", () => {
           assert.equal(
             res.body.ResponseCode,
             200,
-            "ResponseCode success must is 200"
+            "ResponseCode success must is 200",
           );
           done();
         });

@@ -39,7 +39,7 @@ router.post("/", async function (req, res, next) {
     accountName,
     amountMin,
     amountMax,
-    expireDate
+    expireDate,
   );
   if (newAccount) {
     return res.status(200).json(newAccount);
