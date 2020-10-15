@@ -10,7 +10,7 @@ let assert = require("chai").assert;
 let fs = require("fs");
 let yaml = require("js-yaml");
 chai.use(chaiHttp);
-describe("BAOKIM Disbursement", () => {
+describe.only("BAOKIM Disbursement", () => {
   beforeEach(done => {
     done();
   });

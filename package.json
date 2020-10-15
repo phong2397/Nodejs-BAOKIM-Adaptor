@@ -9,6 +9,7 @@
   "dependencies": {
     "app-root-path": "^3.0.0",
     "axios": "^0.20.0",
+    "bull": "^3.18.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cookie-parser": "^1.4.5",
@@ -31,6 +32,7 @@
     "morgan-body": "^2.5.2",
     "request": "^2.88.2",
     "split": "^1.0.1",
+    "throng": "^5.0.0",
     "uuid": "^8.3.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"

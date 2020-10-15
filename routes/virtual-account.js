@@ -22,7 +22,7 @@ router.get("/:accountNo", async function (req, res, next) {
     return res.status(404).json({ msg: "Not found" });
   }
 });
-//TOTO: Unit Test & Catch error when data response with error code
+//TODO: Unit Test & Catch error when data response with error code
 router.post("/", async function (req, res, next) {
   let accountName = req.body.accountName;
   let amountMin = req.body.amountMin;

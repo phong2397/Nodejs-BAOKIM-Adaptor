@@ -8,37 +8,33 @@ var disbursementsRoute = require("./routes/disbursement");
 var virtualAccountRoute = require("./routes/virtual-account");
 var logger = require("./utils/winston/winston");
 const axios = require("axios");
+const AxiosLogger = require("axios-logger");
 var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //Axios Log
 //TODO: Need format logs
-axios.interceptors.request.use(x => {
-  const headers = {
-    common: x.headers.common,
-    method: x.headers[x.method],
-    headers: x.headers,
-  };
-  ["common", "get", "post", "head", "put", "patch", "delete"].forEach(
-    header => {
-      delete headers[header];
-    },
-  );
-
-  const printable = `${new Date()} | Request: ${x.method.toUpperCase()} | ${
-    x.url
-  } | ${JSON.stringify(x.data)} | ${JSON.stringify(headers)}`;
-  logger.loggerConsole("LOGGER").info(printable);
-  return x;
+axios.interceptors.request.use(request => {
+  return AxiosLogger.requestLogger(request, {
+    dateFormat: "isoUtcDateTime",
+    status: false,
+    headers: true,
+    logger: logger.loggerConsole("LOGGER").info,
+  });
 });
 
-axios.interceptors.response.use(x => {
-  const printable = `${new Date()} | Response: ${x.status} | ${JSON.stringify(
-    x.data,
-  )}`;
-  logger.loggerConsole("LOGGER").info(printable);
-  return x;
+axios.interceptors.response.use(response => {
+  return AxiosLogger.responseLogger(response, {
+    dateFormat: false,
+    status: false,
+    headers: false,
+    data: false,
+    prefixText: false,
+    method: false,
+    url: false,
+    logger: logger.loggerConsole("LOGGER").info(this.toString()),
+  });
 });
 
 //File log
