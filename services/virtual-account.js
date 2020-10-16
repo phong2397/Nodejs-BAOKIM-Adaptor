@@ -120,11 +120,28 @@ var retriveVirtualAccount = async function (accNo) {
   });
   return res;
 };
-
+var searchTransaction = async function (referenceId) {
+  let requestInfo = new requestFactory().createRequestInfo(
+    "virtualaccount",
+    VIRTUALACCOUNT.TRANSACTION_SEARCH,
+    { referenceId },
+  );
+  console.log(requestInfo);
+  let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
+  let headers = {
+    "Content-Type": "application/json",
+    Signature: `${sign}`,
+  };
+  let res = await axios.post(COLLECT_URL, requestInfo, {
+    headers,
+  });
+  return res;
+};
 module.exports = {
   createVirtualAccount,
   getVirtualAccount,
   registerVirtualAccount,
   retriveVirtualAccount,
   updateVirtualAccount,
+  searchTransaction,
 };

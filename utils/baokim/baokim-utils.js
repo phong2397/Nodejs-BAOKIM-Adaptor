@@ -17,6 +17,7 @@ const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 const MIN_RANDOM_NUMBER = 100;
 const MAX_RANDOM_NUMBER = 999;
 const { TRANSFERMONEY, VIRTUALACCOUNT } = require("../enum/enum");
+const { extend } = require("date-and-time");
 
 //TODO: Catch request and process
 var postToServer = async (url, data, headers) => {
@@ -72,6 +73,13 @@ class SearchVirtualAccount extends RequestInfo {
     super();
     this.Operation = VIRTUALACCOUNT.SEARCH;
     this.AccNo = accNo;
+  }
+}
+class CheckTransactionVirtualAccount extends RequestInfo {
+  constructor({ referenceId }) {
+    super();
+    this.Operation = VIRTUALACCOUNT.TRANSACTION_SEARCH;
+    this.referenceId = referenceId;
   }
 }
 class VerifyCustomer extends RequestInfo {
@@ -139,16 +147,20 @@ class requestFactory {
       var requestInfo;
       if (type === "virtualaccount") {
         if (operation === VIRTUALACCOUNT.CREATE) {
-          //data = {accName, amountMin, amountMax, expireDate}
+          // data = { accName, amountMin, amountMax, expireDate };
           requestInfo = new RegisterVirtualAccount(data);
         }
         if (operation === VIRTUALACCOUNT.UPDATE) {
-          //data = {accNo, accName, amountMin, amountMax, expireDate}
+          // data = { accNo, accName, amountMin, amountMax, expireDate };
           requestInfo = new UpdateVirtualAccount(data);
         }
         if (operation === VIRTUALACCOUNT.SEARCH) {
-          //data = {accNo}
+          // data = { accNo };
           requestInfo = new SearchVirtualAccount(data);
+        }
+        if (operation === VIRTUALACCOUNT.TRANSACTION_SEARCH) {
+          // data = { referenceId };
+          requestInfo = new CheckTransactionVirtualAccount(data);
         }
       }
       if (type === "transfermoney") {
