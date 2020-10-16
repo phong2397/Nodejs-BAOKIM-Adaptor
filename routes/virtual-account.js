@@ -41,6 +41,25 @@ router.post("/", async function (req, res, next) {
   }
   return res.json({ code: 204, msg: "Cannot create" });
 });
+router.put("/:accountNo", async function (req, res, next) {
+  let accNo = req.params.accountNo;
+  let accName = req.body.accountName;
+  let amountMin = req.body.amountMin;
+  let amountMax = req.body.amountMax;
+  let lifeTime = req.body.lifeTime;
+  let expireDate = moment().add(lifeTime, "days").format("YYYY-MM-DD HH:mm:ss");
+  let response = await virtualAccount.updateVirtualAccount(
+    accNo,
+    accName,
+    amountMin,
+    amountMax,
+    expireDate,
+  );
+  if (response) {
+    return res.status(200).json(response.data);
+  }
+  return res.json({ code: 204, msg: "Cannot create" });
+});
 //Need test
 router.put("/", async function (req, res, next) {
   return res.json({ code: 204, msg: "Cannot update" });
