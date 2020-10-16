@@ -7,12 +7,7 @@ const axios = require("axios");
 const { config } = require(`${appRootPath}/config/config`);
 const privateKey = fs.readFileSync(config.baokim.privatekey);
 const PARTNERCODE = config.baokim.virtualaccount.partnercode;
-const OPERATION_CREATE = config.baokim.virtualaccount.operation.create; // CREATE VA
-const OPERATION_UPDATE = config.baokim.virtualaccount.operation.update; // UPDATE VA
-const OPERATION_SEARCH = config.baokim.virtualaccount.operation.search; // SEARCH VA
-const OPERATION_TRANSACTION_SEARCH =
-  config.baokim.virtualaccount.operation.transaction; // TRANSACTION SEARCH VA
-const CREATETYPE = config.baokim.virtualaccount.settings.createtype; // BAOKIM AUTO GENERTATE ACCOUNT NO
+const { VIRTUALACCOUNT } = require("../utils/enum/enum");
 const COLLECT_URL = config.baokim.collectionUrl;
 
 var createVirtualAccount = async function (
@@ -23,7 +18,7 @@ var createVirtualAccount = async function (
 ) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
-    OPERATION_CREATE,
+    VIRTUALACCOUNT.CREATE,
     {
       accName,
       amountMin,
@@ -47,8 +42,8 @@ var registerVirtualAccount = async function (requestInfo) {
     RequestId: requestInfo.requestId,
     RequestTime: requestInfo.requestTime,
     PartnerCode: PARTNERCODE,
-    Operation: OPERATION_CREATE,
-    CreateType: CREATETYPE,
+    Operation: VIRTUALACCOUNT.CREATE,
+    CreateType: VIRTUALACCOUNT.CREATETYPE,
     AccName: requestInfo.accountName,
     CollectAmountMin: requestInfo.amountMin,
     CollectAmountMax: requestInfo.amountMax,
@@ -77,7 +72,7 @@ var updateVirtualAccount = async function (
 ) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
-    OPERATION_UPDATE,
+    VIRTUALACCOUNT.UPDATE,
     { accNo, accName, amountMin, amountMax, expireDate },
   );
   //Send to baokim
@@ -95,7 +90,7 @@ var updateVirtualAccount = async function (
 var getVirtualAccount = async function (accNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
-    OPERATION_SEARCH,
+    VIRTUALACCOUNT.SEARCH,
     { accNo },
   );
   let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);
@@ -112,7 +107,7 @@ var getVirtualAccount = async function (accNo) {
 var retriveVirtualAccount = async function (accNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "virtualaccount",
-    OPERATION_SEARCH,
+    VIRTUALACCOUNT.SEARCH,
     { accNo },
   );
   let sign = util.createRSASignature(JSON.stringify(requestInfo), privateKey);

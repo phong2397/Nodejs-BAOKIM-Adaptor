@@ -16,19 +16,8 @@ const TIME_FORMAT_FLAT = "YYYYMMDD";
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 const MIN_RANDOM_NUMBER = 100;
 const MAX_RANDOM_NUMBER = 999;
-const TRANSFERMONEY = {
-  VERIFYCUSTOMER: config.baokim.disbursement.operation.verifyCustomer,
-  TRANSFER: config.baokim.disbursement.operation.transferMoney,
-  CHECKTRANSACTION: config.baokim.disbursement.operation.checkTransaction,
-  ACCTYPE: 0,
-};
-const VIRTUALACCOUNT = {
-  CREATE: config.baokim.virtualaccount.operation.create, // CREATE VA
-  UPDATE: config.baokim.virtualaccount.operation.update, // UPDATE VA
-  SEARCH: config.baokim.virtualaccount.operation.search, // SEARCH VA
-  TRANSACTION_SEARCH: config.baokim.virtualaccount.operation.transaction, // TRANSACTION SEARCH VA
-  CREATETYPE: config.baokim.virtualaccount.settings.createtype, // BAOKIM AUTO GENERTATE ACCOUNT NO
-};
+const { TRANSFERMONEY, VIRTUALACCOUNT } = require("../enum/enum");
+
 //TODO: Catch request and process
 var postToServer = async (url, data, headers) => {
   logger.loggerConsole("SEND").info(url);

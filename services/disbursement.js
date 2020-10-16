@@ -3,14 +3,9 @@ const axios = require("axios");
 const { requestFactory } = require("../utils/baokim/baokim-utils");
 const producer = require("../utils/taskqueue/procducer");
 const { config } = require(`${appRootPath}/config/config`);
-const TRANSFERMONEY = {
-  VERIFYCUSTOMER: config.baokim.disbursement.operation.verifyCustomer,
-  TRANSFER: config.baokim.disbursement.operation.transferMoney,
-  CHECKTRANSACTION: config.baokim.disbursement.operation.checkTransaction,
-  ACCTYPE: 0,
-};
-
+const { TRANSFERMONEY } = require("../utils/enum/enum");
 const TRANSFERMONEY_URL = config.baokim.transferMoneyUrl;
+
 var validateCustomer = async function (accNo, bankNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "transfermoney",
