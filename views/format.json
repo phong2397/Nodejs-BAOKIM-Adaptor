@@ -1,7 +1,26 @@
 {
-    "RequestId": "BK20201014198",
-    "RequestTime": "2020-10-14 14:53:46",
+    "RequestId": "BK20201016621",
+    "RequestTime": "2020-10-16 11:09:40",
+    "PartnerCode": "SGFT3",
+    "Operation": 9002,
+    "ReferenceId": "BK20201016621877",
+    "BankNo": "970407",
+    "AccNo": "19035023957034",
+    "AccType": 0,
+    "RequestAmount": "100000",
+    "Memo": "Test chuyen tien 100.000 VND",
+    "Signature": "C1GExHq9EpsyqJmqwoHbS0ZB6VA/s0cbr6KnfaZpolqmOtKJzU5TSEcXwe8xSMg2T7PM17rLFtPa831YW4GXoy/ZhYwiHUL8FD1d1TIbehU2dmbA3Bdy0XfRnWYCZt62ADO612u7VZX2iM4btMj0i0jjY6RJCQoPH8nSBYDf/f4="
+},
+{
+    "RequestId": "BK20201016747",
+    "RequestTime": "2020-10-16 11:08:08",
     "PartnerCode": "VAYSV",
-    "Operation": 9003,
-    "Signature": "K0498B3WfdAJ6lvkn7PjPtZkguXOJafDfYkfiJy8/rf2o/XOmui66AGlnAeQeLBUOTy9XOroZtI+iLXjxEpCIl6lvZw5XpQiTIjxOCgO73eyr7THqUWcmYdWuPqBGMgAFj1EbKE3r0iIc6mxZqV7aHb2rOK8G9sCdgh3VkVCTQk="
+    "Operation": 9002,
+    "ReferenceId": "BK20201016747747",
+    "BankNo": "970457",
+    "AccNo": "100100132448",
+    "AccType": 0,
+    "RequestAmount": "50000",
+    "Memo": "Test chuyen tien",
+    "Signature": "hr4DzgqrODlrHTirMPJBYRPcoUbG2RPUDlEDatKYQQXZyHbsq0ZarPqoqIz1U3nrRWQah0A8PiaGoOqHIGyDtmLDrSDbdCcHVgNwGR9HLX8PLPBG8LovfXUbyCnLdz0snWKI13P9HLAi3Yk1xbnncX6Jevm5O7h293QAxn5i5S0="
 }

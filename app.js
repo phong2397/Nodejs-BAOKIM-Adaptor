@@ -26,13 +26,9 @@ axios.interceptors.request.use(request => {
 
 axios.interceptors.response.use(response => {
   return AxiosLogger.responseLogger(response, {
-    dateFormat: false,
+    dateFormat: "isoUtcDateTime",
     status: false,
-    headers: false,
-    data: false,
-    prefixText: false,
-    method: false,
-    url: false,
+    headers: true,
     logger: logger.loggerConsole("LOGGER").info(this.toString()),
   });
 });
