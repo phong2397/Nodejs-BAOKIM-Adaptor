@@ -2,7 +2,7 @@
 version: "2"
 services:
   app:
-    container_name: baokim-adaptor-production
+    container_name: baokim-adaptor
     build: .
     ports:
       - "3000:3000"
