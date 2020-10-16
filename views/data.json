@@ -1,0 +1,15 @@
+{
+    "RequestId": "BKee648628c6a60c5",
+    "RequestTime": "2020-10-16 14:38:07",
+    "PartnerCode": "BAOKIM",
+    "AccNo": "00884086265",
+    "ClientIdNo": null,
+    "TransId": "BK5F894BBF2C1E07E",
+    "TransAmount": 50000,
+    "TransTime": "2020-10-16 14:29:03",
+    "BefTransDebt": 1000000,
+    "AffTransDebt": 950000,
+    "AccountType": 2,
+    "OrderId": "ODVA20201016070639",
+    "Signature": "b+WLKXGWv24JIopnaFFEA0FRhjtGxOnxt9fcxrHyMANem7G6T0TBwbIztnfSX6eu7pwqS5xKd1bLE3sQIE3GRNrZ9F59Kw2ifKUsjBlFosNb/f3fytBG4DM+7GVs0AnEEuWSokk1kHg8/PWKyQb83NKDwWwyYZdx68qXOWWYjzM="
+}
