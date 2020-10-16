@@ -71,6 +71,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "logs")));
 app.use("/", indexRouter);
 app.use("/logs", express.static(path.join(__dirname, "logs")));
+if (process.env.NODE_ENV == "test") {
+  app.use("/logs-test", express.static(path.join(__dirname, "logs")));
+}
 app.use("/virtualaccount", virtualAccountRoute);
 app.use("/disbursement", disbursementsRoute);
 // catch 404 and forward to error handler
