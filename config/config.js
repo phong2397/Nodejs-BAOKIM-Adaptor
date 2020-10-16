@@ -4,7 +4,7 @@ const fs = require("fs");
 const appRootPath = require("app-root-path");
 
 var loadConfig = () => {
-  var env = "production";
+  var env = "test";
   // var env = process.env.NODE_ENV;
   console.log("Enviroment: " + env);
   var path = "";

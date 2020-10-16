@@ -1,5 +1,4 @@
 //During the test the env variable is set to test
-process.env.NODE_ENV = "production";
 let baokimUtils = require("../utils/baokim/baokim-utils");
 let virtualAccount = require("../services/virtual-account");
 let moment = require("moment");
@@ -16,7 +15,7 @@ describe("Baokim", () => {
   beforeEach(done => {
     done();
   });
-  describe.only("Product Test Script", () => {
+  describe("Product Test Script", () => {
     it("Signature must be true", async () => {
       let rawData =
         "BK20201016125|2020-10-16 12:14:01|SGFT3|9002|BK20201016125885|970407|19035023957034|0|100000|Test chuyen tien 100.000 VND";

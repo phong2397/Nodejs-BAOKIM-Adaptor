@@ -3,7 +3,7 @@ const moment = require("moment-timezone");
 const express = require("express");
 const router = express.Router();
 const virtualAccount = require("../services/virtual-account");
-
+const EXPIRE_DAY = 10000;
 //TODO: Unit Test
 router.get("/", async function (req, res, next) {
   const { page = 1, limit = 10 } = req.query;
@@ -27,7 +27,9 @@ router.post("/", async function (req, res, next) {
   let accountName = req.body.accountName;
   let amountMin = req.body.amountMin;
   let amountMax = req.body.amountMax;
-  let expireDate = moment().add(3, "days").format("YYYY-MM-DD HH:mm:ss");
+  let expireDate = moment()
+    .add(EXPIRE_DAY, "days")
+    .format("YYYY-MM-DD HH:mm:ss");
   let response = await virtualAccount.createVirtualAccount(
     accountName,
     amountMin,
