@@ -79,7 +79,7 @@ class CheckTransactionVirtualAccount extends RequestInfo {
   constructor({ referenceId }) {
     super();
     this.Operation = VIRTUALACCOUNT.TRANSACTION_SEARCH;
-    this.referenceId = referenceId;
+    this.ReferenceId = referenceId;
   }
 }
 class VerifyCustomer extends RequestInfo {
