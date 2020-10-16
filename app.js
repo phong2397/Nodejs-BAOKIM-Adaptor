@@ -29,7 +29,7 @@ axios.interceptors.response.use(response => {
     dateFormat: "isoUtcDateTime",
     status: false,
     headers: true,
-    logger: logger.loggerConsole("LOGGER").info(this.toString()),
+    logger: logger.loggerConsole("LOGGER").info,
   });
 });
 

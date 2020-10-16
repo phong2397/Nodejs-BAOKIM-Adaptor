@@ -1,5 +1,5 @@
 //During the test the env variable is set to test
-process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "test";
 let baokimUtils = require("../utils/baokim/baokim-utils");
 let virtualAccount = require("../services/virtual-account");
 let moment = require("moment");

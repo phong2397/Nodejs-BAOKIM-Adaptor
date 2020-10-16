@@ -29,6 +29,7 @@ var transferMoney = async function (accNo, bankNo, requestAmount, memo) {
   let headers = {
     "Content-Type": "application/json",
   };
+  console.log(requestInfo.getRawDataFormatted());
   let res = await axios.post(TRANSFERMONEY_URL, requestInfo, {
     headers,
   });

@@ -82,10 +82,14 @@ class VerifyCustomer extends RequestInfo {
     this.AccNo = accNo;
     this.AccType = TRANSFERMONEY.ACCTYPE;
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.BankNo}|${
-        this.AccNo
-      }|${this.AccType}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() +
+      `|${this.Operation}|${this.BankNo}|${this.AccNo}|${this.AccType}`
     );
   }
 }
@@ -100,11 +104,16 @@ class TransferMoney extends RequestInfo {
     this.AccType = TRANSFERMONEY.ACCTYPE;
     this.RequestAmount = requestAmount;
     this.Memo = memo;
+    // RequestId|RequestTime|PartnerCode|Operation|ReferenceId|BankNo|AccNo|AccType|RequestAmount|Memo
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}|${
-        this.BankNo
-      }|${this.AccNo}|${this.AccType}|${this.RequestAmount}|${this.Memo}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() +
+      `|${this.Operation}|${this.ReferenceId}|${this.BankNo}|${this.AccNo}|${this.AccType}|${this.RequestAmount}|${this.Memo}`
     );
   }
 }
@@ -114,8 +123,13 @@ class CheckTransaction extends RequestInfo {
     this.Operation = TRANSFERMONEY.CHECKTRANSACTION;
     this.ReferenceId = referenceId;
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() + `|${this.Operation}|${this.ReferenceId}`
     );
   }
 }
