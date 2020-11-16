@@ -16,19 +16,9 @@ const TIME_FORMAT_FLAT = "YYYYMMDD";
 const TIMEZONE_VN = "Asia/Ho_Chi_Minh";
 const MIN_RANDOM_NUMBER = 100;
 const MAX_RANDOM_NUMBER = 999;
-const TRANSFERMONEY = {
-  VERIFYCUSTOMER: config.baokim.disbursement.operation.verifyCustomer,
-  TRANSFER: config.baokim.disbursement.operation.transferMoney,
-  CHECKTRANSACTION: config.baokim.disbursement.operation.checkTransaction,
-  ACCTYPE: 0,
-};
-const VIRTUALACCOUNT = {
-  CREATE: config.baokim.virtualaccount.operation.create, // CREATE VA
-  UPDATE: config.baokim.virtualaccount.operation.update, // UPDATE VA
-  SEARCH: config.baokim.virtualaccount.operation.search, // SEARCH VA
-  TRANSACTION_SEARCH: config.baokim.virtualaccount.operation.transaction, // TRANSACTION SEARCH VA
-  CREATETYPE: config.baokim.virtualaccount.settings.createtype, // BAOKIM AUTO GENERTATE ACCOUNT NO
-};
+const { TRANSFERMONEY, VIRTUALACCOUNT } = require("../enum/enum");
+const { extend } = require("date-and-time");
+
 //TODO: Catch request and process
 var postToServer = async (url, data, headers) => {
   logger.loggerConsole("SEND").info(url);
@@ -85,6 +75,13 @@ class SearchVirtualAccount extends RequestInfo {
     this.AccNo = accNo;
   }
 }
+class CheckTransactionVirtualAccount extends RequestInfo {
+  constructor({ referenceId }) {
+    super();
+    this.Operation = VIRTUALACCOUNT.TRANSACTION_SEARCH;
+    this.ReferenceId = referenceId;
+  }
+}
 class VerifyCustomer extends RequestInfo {
   constructor({ accNo, bankNo }) {
     super();
@@ -93,10 +90,14 @@ class VerifyCustomer extends RequestInfo {
     this.AccNo = accNo;
     this.AccType = TRANSFERMONEY.ACCTYPE;
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.BankNo}|${
-        this.AccNo
-      }|${this.AccType}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() +
+      `|${this.Operation}|${this.BankNo}|${this.AccNo}|${this.AccType}`
     );
   }
 }
@@ -111,11 +112,16 @@ class TransferMoney extends RequestInfo {
     this.AccType = TRANSFERMONEY.ACCTYPE;
     this.RequestAmount = requestAmount;
     this.Memo = memo;
+    // RequestId|RequestTime|PartnerCode|Operation|ReferenceId|BankNo|AccNo|AccType|RequestAmount|Memo
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}|${
-        this.BankNo
-      }|${this.AccNo}|${this.AccType}|${this.RequestAmount}|${this.Memo}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() +
+      `|${this.Operation}|${this.ReferenceId}|${this.BankNo}|${this.AccNo}|${this.AccType}|${this.RequestAmount}|${this.Memo}`
     );
   }
 }
@@ -125,8 +131,13 @@ class CheckTransaction extends RequestInfo {
     this.Operation = TRANSFERMONEY.CHECKTRANSACTION;
     this.ReferenceId = referenceId;
     this.Signature = util.createRSASignature(
-      `${this.getRawDataFormatted()}|${this.Operation}|${this.ReferenceId}`,
+      this.getRawDataFormatted(),
       privatekey,
+    );
+  }
+  getRawDataFormatted() {
+    return (
+      super.getRawDataFormatted() + `|${this.Operation}|${this.ReferenceId}`
     );
   }
 }
@@ -136,16 +147,20 @@ class requestFactory {
       var requestInfo;
       if (type === "virtualaccount") {
         if (operation === VIRTUALACCOUNT.CREATE) {
-          //data = {accName, amountMin, amountMax, expireDate}
+          // data = { accName, amountMin, amountMax, expireDate };
           requestInfo = new RegisterVirtualAccount(data);
         }
         if (operation === VIRTUALACCOUNT.UPDATE) {
-          //data = {accNo, accName, amountMin, amountMax, expireDate}
+          // data = { accNo, accName, amountMin, amountMax, expireDate };
           requestInfo = new UpdateVirtualAccount(data);
         }
         if (operation === VIRTUALACCOUNT.SEARCH) {
-          //data = {accNo}
+          // data = { accNo };
           requestInfo = new SearchVirtualAccount(data);
+        }
+        if (operation === VIRTUALACCOUNT.TRANSACTION_SEARCH) {
+          // data = { referenceId };
+          requestInfo = new CheckTransactionVirtualAccount(data);
         }
       }
       if (type === "transfermoney") {

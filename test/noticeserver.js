@@ -128,36 +128,36 @@ describe("BAOKIM", () => {
   });
   //TODO: Need collect old data to test
   context("POST /bankswitch ", () => {
-    // it("Must be success", done => {
-    //   let data = {
-    //     RequestId: "BKf7690e177a641f1",
-    //     RequestTime: "2020-10-06 10:47:22",
-    //     PartnerCode: "BAOKIM",
-    //     AccName: "BK VAYSV",
-    //     AccNo: "00837997608",
-    //     ExpireDate: "2020-10-01 12:18:35",
-    //     OrderId: "OD20200930120918",
-    //     BankSortName: "VPBANK",
-    //   };
-    //   chai
-    //     .request(server)
-    //     .post("/bankswitch")
-    //     .set({
-    //       Signature:
-    //         "NgAaXjFlFR4RqZuEoZ7sQLEm+/j9jAmvsNvS3+DokSfgJ0EYyrWZ1JJu4wEJQdHErZjN4xtvX5F6q3HQJEmneJ4BDk+YSEnKuPwBbGFpyb2YdbAoKj4ASw8J+igps/W9Qze7HX1Hpu5EG452YcWx6BOlJm16DZ3LPImIlLviAsE=",
-    //     })
-    //     .send(data)
-    //     .end((err, res) => {
-    //       res.should.have.status(200);
-    //       expect(res.body.ResponseCode).to.equal(200);
-    //       expect(res.body.ResponseMessage).to.equal("Success");
-    //       expect(res.body.AccNo).to.equal("00837997608");
-    //       expect(res.body.Signature).to.equal(
-    //         "af70deZff3hVlg+HUEp9cVcYdz2g9mzseVTbBEsVbfWWadNh/IY67tzPRbAxNqhfOtzilnSeD9slKu19e2pJNK5I0qEZKtQ7IR8HQ/WD/nVYxGEPlVFhk+9XNgsyPWanRE6BBNQ+1TlhYCx9dWDbUR3DzDNBKB5FRU3+cuBoN3w=",
-    //       );
-    //       done();
-    //     });
-    // });
+    it("Must be success", done => {
+      let data = {
+        RequestId: "BK31c54e1318d6255",
+        RequestTime: "2020-10-13 16:08:34",
+        PartnerCode: "BAOKIM",
+        AccName: "BK VAYSV",
+        AccNo: "00856293476",
+        ExpireDate: "2020-10-01 13:34:26",
+        OrderId: "OD20200930130928",
+        BankShortName: "VPBANK",
+      };
+      chai
+        .request(server)
+        .post("/bankswitch")
+        .set({
+          Signature:
+            "FPOJpsz5cxkcfW9W3eOlMgRSWXCuzdqm711YD84FYLF3p16C2Ghx9qLUqqpXSu0gN3VOp9aChOOaAuBa0PixksDB2fS4UXYAyqDwEkBAC4edij4A0Vsl/EtarIpX0vhQmn+V5TlfXH3fHw1B9x/O0Hk4yY3OjUt23jojKHyGkB4=",
+        })
+        .send(data)
+        .end((err, res) => {
+          res.should.have.status(200);
+          expect(res.body.ResponseCode).to.equal(200);
+          expect(res.body.ResponseMessage).to.equal("Success");
+          expect(res.body.AccNo).to.equal("00856293476");
+          // expect(res.body.Signature).to.equal(
+          //   "af70deZff3hVlg+HUEp9cVcYdz2g9mzseVTbBEsVbfWWadNh/IY67tzPRbAxNqhfOtzilnSeD9slKu19e2pJNK5I0qEZKtQ7IR8HQ/WD/nVYxGEPlVFhk+9XNgsyPWanRE6BBNQ+1TlhYCx9dWDbUR3DzDNBKB5FRU3+cuBoN3w=",
+          // );
+          done();
+        });
+    });
     it("Must be fail - Signature Incorrect", done => {
       let data = {
         RequestId: "BKf7690e177a641f1",

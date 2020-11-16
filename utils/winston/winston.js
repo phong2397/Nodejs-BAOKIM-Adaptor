@@ -25,7 +25,7 @@ var options = {
     colorize: true,
   },
 };
-var loggerConsole = (_label) => {
+var loggerConsole = _label => {
   var _logger = winston.createLogger({
     format: combine(label({ label: _label }), timestamp(), consoleFormat),
     transports: [new winston.transports.Console()],
@@ -40,7 +40,7 @@ var loggerConsole = (_label) => {
   };
   return _logger;
 };
-var loggerFile = (_label) => {
+var loggerFile = _label => {
   var _logger = winston.createLogger({
     format: combine(label({ label: _label }), timestamp(), consoleFormat),
     transports: [

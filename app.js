@@ -8,38 +8,29 @@ var disbursementsRoute = require("./routes/disbursement");
 var virtualAccountRoute = require("./routes/virtual-account");
 var logger = require("./utils/winston/winston");
 const axios = require("axios");
+const AxiosLogger = require("axios-logger");
 var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //Axios Log
-axios.interceptors.request.use(x => {
-  // replace console with our logger of choice
-  const headers = {
-    common: x.headers.common,
-    method: x.headers[x.method],
-    headers: x.headers,
-  };
-
-  ["common", "get", "post", "head", "put", "patch", "delete"].forEach(
-    header => {
-      delete headers[header];
-    },
-  );
-
-  const printable = `${new Date()} | Request: ${x.method.toUpperCase()} | ${
-    x.url
-  } | ${JSON.stringify(x.data)} | ${JSON.stringify(headers)}`;
-  logger.loggerConsole("LOGGER").info(printable);
-  return x;
+//TODO: Need format logs
+axios.interceptors.request.use(request => {
+  return AxiosLogger.requestLogger(request, {
+    dateFormat: "isoUtcDateTime",
+    status: false,
+    headers: true,
+    logger: logger.loggerConsole("LOGGER").info,
+  });
 });
 
-axios.interceptors.response.use(x => {
-  const printable = `${new Date()} | Response: ${x.status} | ${JSON.stringify(
-    x.data,
-  )}`;
-  logger.loggerConsole("LOGGER").info(printable);
-  return x;
+axios.interceptors.response.use(response => {
+  return AxiosLogger.responseLogger(response, {
+    dateFormat: "isoUtcDateTime",
+    status: false,
+    headers: true,
+    logger: logger.loggerConsole("LOGGER").info,
+  });
 });
 
 //File log
@@ -77,8 +68,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "logs")));
 app.use("/", indexRouter);
 app.use("/logs", express.static(path.join(__dirname, "logs")));
+if (process.env.NODE_ENV == "test") {
+  app.use("/logs-test", express.static(path.join(__dirname, "logs")));
+}
 app.use("/virtualaccount", virtualAccountRoute);
 app.use("/disbursement", disbursementsRoute);
 // catch 404 and forward to error handler

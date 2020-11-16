@@ -1,15 +1,11 @@
 const appRootPath = require("app-root-path");
 const axios = require("axios");
 const { requestFactory } = require("../utils/baokim/baokim-utils");
+const producer = require("../utils/taskqueue/procducer");
 const { config } = require(`${appRootPath}/config/config`);
-const TRANSFERMONEY = {
-  VERIFYCUSTOMER: config.baokim.disbursement.operation.verifyCustomer,
-  TRANSFER: config.baokim.disbursement.operation.transferMoney,
-  CHECKTRANSACTION: config.baokim.disbursement.operation.checkTransaction,
-  ACCTYPE: 0,
-};
-
+const { TRANSFERMONEY } = require("../utils/enum/enum");
 const TRANSFERMONEY_URL = config.baokim.transferMoneyUrl;
+
 var validateCustomer = async function (accNo, bankNo) {
   let requestInfo = new requestFactory().createRequestInfo(
     "transfermoney",
@@ -33,9 +29,12 @@ var transferMoney = async function (accNo, bankNo, requestAmount, memo) {
   let headers = {
     "Content-Type": "application/json",
   };
+  console.log(requestInfo.getRawDataFormatted());
   let res = await axios.post(TRANSFERMONEY_URL, requestInfo, {
     headers,
   });
+  //Send to queue
+  //let res = await producer.sendPayment(requestInfo);
   return res;
 };
 var checkTransaction = async function (referenceId) {

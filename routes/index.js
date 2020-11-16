@@ -103,6 +103,7 @@ router.post("/transaction", function (req, res, next) {
   };
   //Sandbox test - required field - BK request null
   requestInfo.ClientIdNo = requestInfo.ClientIdNo ? requestInfo.ClientIdNo : "";
+  // RequestId|RequestTime|PartnerCode|AccNo|ClientIdNo|TransId|TransAmount|TransTime|BefTransDebt|AffTransDebt|AccountType|OrderId
   let dataFromRequest = `${requestInfo.RequestId}|${requestInfo.RequestTime}|${requestInfo.PartnerCode}|${requestInfo.AccNo}|${requestInfo.ClientIdNo}|${requestInfo.TransId}|${requestInfo.TransAmount}|${requestInfo.TransTime}|${requestInfo.BefTransDebt}|${requestInfo.AffTransDebt}|${requestInfo.AccountType}|${requestInfo.OrderId}`;
   let checkSignature = util.baokimVerifySignature(
     dataFromRequest,
@@ -139,7 +140,7 @@ router.post("/bankswitch", function (req, res, next) {
     AccNo: req.body.AccNo,
     ExpireDate: req.body.ExpireDate,
     OrderId: req.body.OrderId,
-    BankShortName: req.body.BankSortName,
+    BankShortName: req.body.BankShortName,
   };
   let Signature = req.headers.signature;
   let checkSignature = util.baokimVerifySignature(
